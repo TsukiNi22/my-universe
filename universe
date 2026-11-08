@@ -1,0 +1,438 @@
+#!/usr/bin/env python3
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Edition:
+##  09/11/2026 by Tsukini
+
+File Name:
+##  universe
+
+File Description:
+##  Command line tool to set up, install and update the packages of my-universe
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+##### Import #####
+# Import that can't be in the try
+from sys import exit, stderr, path as sys_path
+from pathlib import Path
+sys_path.insert(0, str(Path(__file__).resolve().parent / "scripts"))
+from catalog import CatalogError, HttpSource, LocalSource, load_config, build_entry, strip_version, version_key
+from catalog import urls, dnf_section, apt_line, pacman_section
+from const import RETURN, ERROR, FILES, VALUES
+
+# Import that can be checked
+try:
+    from datetime import datetime, timezone # Used for the date of an online entry
+    from os import environ, geteuid # Used for sudo / SUDO_ASKPASS
+    import subprocess # Used to run the package managers and git
+    import argparse # Used for the commands and their arguments
+    import tempfile # Used to write the root files through `install`
+    import shutil # Used to find the package managers
+    import json # Used to read packages.json
+    import re # Used to read /etc/os-release and the configuration files
+except ImportError as e:
+    stderr.write(f"Import Error ({__file__}): {e}\n")
+    exit(255)
+
+# Check if the program is call and not imported
+if __name__ != "__main__":
+    stderr.write(f"The {__file__} can only be executed and not imported!\n")
+    exit(ERROR.FATAL)
+
+##### Const #####
+FILES_OF = {
+    "rpm": ("/etc/yum.repos.d/universe.repo", "/etc/yum.repos.d/universe-private.repo"),
+    "deb": ("/etc/apt/sources.list.d/universe.list", "/etc/apt/sources.list.d/universe-private.list"),
+}
+KEYRING = "/etc/apt/keyrings/universe.gpg"
+PACMAN_CONF = environ.get("PACMAN_CONF", "/etc/pacman.conf")
+
+##### Class #####
+class Runner():
+    """
+        Run the commands (root ones through sudo), or print them with --dry-run
+    """
+    def __init__(self, dry_run: bool = False, no_sudo: bool = False) -> None:
+        self.dry_run = dry_run
+        self._sudo = [] if no_sudo or geteuid() == 0 else (["sudo", "-A"] if environ.get("SUDO_ASKPASS") else ["sudo"])
+
+    def run(self, cmd: list[str], root: bool = False, data: bytes | None = None) -> int:
+        """Run a command, its return code (0 with --dry-run)"""
+        cmd = (self._sudo if root else []) + cmd
+        print(f"+ {' '.join(cmd)}")
+        if self.dry_run:
+            return RETURN.OK
+        return subprocess.run(cmd, input=data).returncode
+
+    def write(self, dest: str, content: str, append: bool = False) -> int:
+        """Write (or append to) a root file"""
+        if self.dry_run:
+            print(f"+ {'append to' if append else 'write'} {dest}:")
+            print("".join(f"    {line}\n" for line in content.splitlines()), end="")
+            return RETURN.OK
+        if append:
+            return self.run(["tee", "-a", dest], root=True, data=content.encode())
+        with tempfile.NamedTemporaryFile("w", encoding="utf-8", suffix=".universe", delete=False) as tmp:
+            tmp.write(content)
+        try:
+            return self.run(["install", "-m", "0644", "-D", tmp.name, dest], root=True)
+        finally:
+            Path(tmp.name).unlink()
+
+##### Tools #####
+def fail(message: str, code: int = ERROR.ACTION) -> None: # Print an error and exit
+    stderr.write(f"Error: {message}\n")
+    exit(code)
+
+def detect() -> str: # Format of the system: rpm | deb | arch
+    try:
+        with open("/etc/os-release", "r", encoding="utf-8") as f:
+            fields = dict(re.findall(r'^([A-Z_]+)="?([^"\n]*)"?$', f.read(), re.M))
+    except OSError:
+        fields = {}
+    ids = f"{fields.get('ID', '')} {fields.get('ID_LIKE', '')}"
+    if re.search(r"\b(fedora|rhel|centos|rocky|almalinux)\b", ids):
+        return "rpm"
+    if re.search(r"\b(debian|ubuntu)\b", ids):
+        return "deb"
+    if re.search(r"\b(arch|manjaro|endeavouros|cachyos)\b", ids):
+        return "arch"
+    for fmt, tool in (("rpm", "dnf"), ("deb", "apt-get"), ("arch", "pacman")):
+        if shutil.which(tool):
+            return fmt
+    fail("unsupported distribution (rpm, deb or arch based only)")
+    return ""
+
+def stub(settings: dict, source: dict) -> dict: # Entry of a source that could not be read
+    return {"name": source["name"], "repo": source["repo"], "category": source["category"], "private": source.get("private", False),
+            "main": source["main"], "summary": {"en": source.get("summary_en", ""), "fr": source.get("summary_fr", "")},
+            "repository": f"https://github.com/{settings['owner']}/{source['repo']}", "pages": "", "docs": source.get("docs", ""),
+            "formats": {}, "version": "", "pre": "", "release": None, "packages": [], "updated": ""}
+
+def load(online: bool = False, private: bool = True) -> tuple[dict, list[dict]]: # Settings + every entry (public + private)
+    try:
+        settings, sources = load_config(private=private)
+    except CatalogError as e:
+        fail(str(e), ERROR.FATAL)
+    known: dict[str, dict] = {}
+    if not online and FILES.PACKAGES.is_file():
+        with open(FILES.PACKAGES, "r", encoding="utf-8") as f:
+            known = {e["name"]: e for e in json.load(f).get("sources", [])}
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    entries: list[dict] = []
+    for source in sources:
+        if not source["private"] and source["name"] in known:
+            entries.append(known[source["name"]])
+            continue
+        reader = LocalSource(source) if source["private"] else HttpSource(settings, source)
+        if source["private"] and not reader.path.is_dir(): # not mirrored yet: said by list / info, not on every command
+            entries.append({**stub(settings, source), "note": "not mirrored, run: universe mirror"})
+            continue
+        try:
+            entries.append(build_entry(settings, source, reader, known.get(source["name"]), today))
+        except CatalogError as e:
+            stderr.write(f"Warning: {source['name']}: {e}\n")
+            entries.append(stub(settings, source))
+    return settings, entries
+
+def select(entries: list[dict], names: list[str], args: argparse.Namespace) -> list[dict]: # Entries asked (names, all, category)
+    categories = [c for c, on in (("hand-made", getattr(args, "hand_made", False)), ("ai-made", getattr(args, "ai_made", False))) if on]
+    if names and names != ["all"]:
+        known = {e["name"]: e for e in entries}
+        unknown = [n for n in names if n not in known]
+        if unknown:
+            fail(f"unknown package {', '.join(unknown)} (known: {', '.join(known)})")
+        entries = [known[n] for n in names]
+    return [e for e in entries if not categories or e["category"] in categories]
+
+def base_of(entry: dict, fmt: str) -> str: # Base url of the package repository of an entry (mirror for a private one)
+    if not entry.get("private"):
+        return entry["pages"]
+    path = FILES.MIRROR / entry["repo"]
+    return f"file:{path}" if fmt == "deb" else f"file://{path}"
+
+def installed(fmt: str, names: list[str]) -> dict[str, str]: # Installed version of the given packages
+    if not names:
+        return {}
+    if fmt == "rpm" and shutil.which("rpm"):
+        cmd = ["rpm", "-q", "--qf", "%{NAME} %{VERSION}-%{RELEASE}\\n", *names]
+    elif fmt == "deb" and shutil.which("dpkg-query"):
+        cmd = ["dpkg-query", "-W", "-f", "${Package} ${Version} ${db:Status-Abbrev}\\n", *names]
+    elif fmt == "arch" and shutil.which("pacman"):
+        cmd = ["pacman", "-Q", *names]
+    else:
+        return {}
+    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    found: dict[str, str] = {}
+    for line in out.splitlines():
+        parts = line.split()
+        if len(parts) >= 2 and parts[0] in names and (fmt != "deb" or parts[2:3] == ["ii"]):
+            found[parts[0]] = strip_version(parts[1])
+    return found
+
+def all_names(entries: list[dict]) -> list[str]: # Every package name of the entries
+    return sorted({p["name"] for e in entries for p in e["packages"]} | {e["main"] for e in entries} | {e["main"] + VALUES.PRE_SUFFIX for e in entries})
+
+def show(rows: list[list[str]], headers: list[str], rtk: bool) -> None: # Table (or one line per row with --rtk)
+    if rtk:
+        print("|".join(h.lower() for h in headers))
+        for row in rows:
+            print("|".join(row))
+        return
+    widths = [max(len(str(x)) for x in col) for col in zip(headers, *rows)]
+    for row in [headers] + rows:
+        print("  ".join(str(x).ljust(w) for x, w in zip(row, widths)).rstrip())
+
+def configured(url: str, own: tuple[str, ...], pattern: str) -> str: # File (other than ours) that already sets up this url
+    for file in sorted(Path(pattern).parent.glob(Path(pattern).name)):
+        if str(file) not in own:
+            try:
+                if url in file.read_text(encoding="utf-8", errors="replace"):
+                    return str(file)
+            except OSError:
+                continue
+    return ""
+
+##### Commands #####
+def cmd_setup(args: argparse.Namespace) -> int: # Register the package repositories
+    settings, entries = load(private=args.private)
+    if args.private:
+        missing = [e for e in entries if e.get("private") and not (FILES.MIRROR / e["repo"]).is_dir()]
+        if missing:
+            cmd_mirror(argparse.Namespace(names=[e["name"] for e in missing], all=False))
+            settings, entries = load(private=True)
+    fmt = detect()
+    runner = Runner(args.dry_run, args.no_sudo)
+    key = str(FILES.KEY)
+    groups = {False: [e for e in entries if not e.get("private")], True: [e for e in entries if e.get("private")]}
+    code = RETURN.OK
+    print(f"Detected {fmt}-based system: setting up the universe repositories")
+
+    # Keep the repositories set up on their own, and those without this format
+    kept: dict[bool, list[dict]] = {False: [], True: []}
+    for private, group in groups.items():
+        for entry in group:
+            base = base_of(entry, fmt)
+            if fmt not in entry["formats"] or not base:
+                print(f"  - {entry['name']}: no {fmt} package, skipped")
+                continue
+            if fmt == "arch":
+                other = PACMAN_CONF if re.search(rf"^\[{re.escape(entry['formats']['arch']['db'])}\]", Path(PACMAN_CONF).read_text(encoding="utf-8"), re.M) else ""
+            elif fmt == "rpm":
+                other = configured(f"{base}/fedora", FILES_OF["rpm"], "/etc/yum.repos.d/*.repo")
+            else:
+                other = configured(f"{base}/debian", FILES_OF["deb"], "/etc/apt/sources.list.d/*") or configured(f"{base}/debian", FILES_OF["deb"], "/etc/apt/sources.list")
+            if other:
+                print(f"  - {entry['name']}: already set up by {other}, skipped")
+                continue
+            print(f"  + {entry['name']}{' (private, mirror)' if private else ''}")
+            kept[private].append(entry)
+    if not kept[False] and not kept[True]:
+        print("Nothing to set up.")
+        return RETURN.OK
+
+    # Key + repository files
+    if fmt == "rpm":
+        code |= runner.run(["rpm", "--import", key], root=True)
+        for private, group in kept.items():
+            if group:
+                key_url = lambda e: f"file://{FILES.MIRROR / e['repo'] / settings['key']}" if private else f"{e['pages']}/{settings['key']}"
+                code |= runner.write(FILES_OF["rpm"][private], "\n".join(dnf_section(e, base_of(e, fmt), key_url(e)) for e in group))
+    elif fmt == "deb":
+        dearmored = subprocess.run(["gpg", "--dearmor"], input=FILES.KEY.read_bytes(), capture_output=True)
+        if dearmored.returncode != 0:
+            fail("gpg --dearmor of the signing key failed")
+        code |= runner.run(["install", "-m", "0755", "-d", "/etc/apt/keyrings"], root=True)
+        code |= runner.run(["tee", KEYRING], root=True, data=dearmored.stdout) if not runner.dry_run else runner.run(["tee", KEYRING], root=True)
+        for private, group in kept.items():
+            if group:
+                code |= runner.write(FILES_OF["deb"][private], "".join(apt_line(e, base_of(e, fmt), KEYRING) for e in group))
+        code |= runner.run(["apt-get", "update"], root=True)
+    else:
+        code |= runner.run(["pacman-key", "--add", key], root=True)
+        code |= runner.run(["pacman-key", "--lsign-key", settings.get("fingerprint", "")], root=True)
+        content = "".join("\n" + pacman_section(e, base_of(e, fmt)) for group in kept.values() for e in group)
+        code |= runner.write(PACMAN_CONF, content, append=True)
+        code |= runner.run(["pacman", "-Sy"], root=True)
+    print("✓ universe repositories set up" if code == RETURN.OK else "Error: some commands failed")
+    return RETURN.OK if code == RETURN.OK else ERROR.ACTION
+
+def cmd_install(args: argparse.Namespace) -> int: # Install packages
+    _, entries = load()
+    fmt = detect()
+    packages: list[str] = []
+    for entry in select(entries, args.names, args):
+        if fmt not in entry["formats"]:
+            print(f"  - {entry['name']}: no {fmt} package, skipped")
+            continue
+        if args.pre and entry["pre"]:
+            packages.append(entry["main"] + VALUES.PRE_SUFFIX)
+        else:
+            if args.pre:
+                print(f"  - {entry['name']}: no pre-release, stable installed")
+            packages.append(entry["main"])
+    if not packages:
+        print("Nothing to install.")
+        return RETURN.OK
+    yes = {"rpm": ["-y"], "deb": ["-y"], "arch": ["--noconfirm"]}[fmt] if args.yes else []
+    cmd = {"rpm": ["dnf", "install"], "deb": ["apt-get", "install"], "arch": ["pacman", "-S", "--needed"]}[fmt]
+    return RETURN.OK if Runner(args.dry_run, args.no_sudo).run(cmd + yes + packages, root=True) == 0 else ERROR.ACTION
+
+def cmd_update(args: argparse.Namespace) -> int: # Refresh the mirror, then upgrade the installed universe packages
+    if any(p.is_dir() for p in FILES.MIRROR.glob("*")) and not args.dry_run:
+        mirrored = [p.name for p in FILES.MIRROR.iterdir() if p.is_dir()]
+        cmd_mirror(argparse.Namespace(names=[], all=False, repos=mirrored))
+    _, entries = load()
+    fmt = detect()
+    names = sorted(installed(fmt, all_names(entries)))
+    if not names:
+        print("No universe package installed.")
+        return RETURN.OK
+    runner = Runner(args.dry_run, args.no_sudo)
+    yes = {"rpm": ["-y"], "deb": ["-y"], "arch": ["--noconfirm"]}[fmt] if args.yes else []
+    if fmt == "rpm":
+        code = runner.run(["dnf", "upgrade", "--refresh", *yes, *names], root=True)
+    elif fmt == "deb":
+        code = runner.run(["apt-get", "update"], root=True) or runner.run(["apt-get", "install", "--only-upgrade", *yes, *names], root=True)
+    else:
+        code = runner.run(["pacman", "-Sy"], root=True) or runner.run(["pacman", "-S", "--needed", *yes, *names], root=True)
+    return RETURN.OK if code == 0 else ERROR.ACTION
+
+def cmd_list(args: argparse.Namespace) -> int: # Every package with its versions
+    _, entries = load(args.online)
+    fmt = detect()
+    have = installed(fmt, all_names(entries))
+    rows = []
+    for e in select(entries, [], args):
+        inst = have.get(e["main"]) or have.get(e["main"] + VALUES.PRE_SUFFIX) or "-"
+        rows.append([e["name"] + (f" (private{', not mirrored' if e.get('note') else ''})" if e.get("private") else ""), e["category"], e["version"] or "-", e["pre"] or "-", inst,
+                     ",".join(f for f in VALUES.FORMATS if f in e["formats"]) or "-"])
+    show(rows, ["Name", "Category", "Version", "Pre", "Installed", "Formats"], args.rtk)
+    return RETURN.OK
+
+def cmd_outdated(args: argparse.Namespace) -> int: # Installed packages with a newer version
+    _, entries = load(args.online)
+    fmt = detect()
+    have = installed(fmt, all_names(entries))
+    rows = []
+    for e in entries:
+        for p in e["packages"]:
+            if p["name"] in have and version_key(p["version"]) > version_key(have[p["name"]]):
+                rows.append([e["name"], p["name"], have[p["name"]], p["version"]])
+    if not rows:
+        print("✓ every installed universe package is up to date")
+        return RETURN.OK
+    show(rows, ["Name", "Package", "Installed", "Latest"], args.rtk)
+    return RETURN.KO
+
+def cmd_info(args: argparse.Namespace) -> int: # Everything about the packages (dnf info style)
+    settings, entries = load(args.online)
+    fmt = detect()
+    have = installed(fmt, all_names(entries))
+    for n, e in enumerate(select(entries, args.names, args)):
+        links = urls(settings, e)
+        formats = []
+        for f in VALUES.FORMATS:
+            if f in e["formats"]:
+                detail = e["formats"][f]
+                extra = [f"fedora {', '.join(detail['releases'])}"] if f == "rpm" else ([f"[{detail['db']}]"] if f == "arch" else [])
+                formats.append(f"{f} ({', '.join(extra + detail['arches'])})")
+        inst = [f"{name} {version}" for name, version in have.items() if name in {p['name'] for p in e['packages']} | {e['main']}]
+        fields = [("Name", e["name"]), ("Category", e["category"]), ("Visibility", (f"private ({e['note']})" if e.get("note") else "private") if e.get("private") else "public"),
+                  ("Version", e["version"] or "-"), ("Pre-release", e["pre"] or "-"), ("Installed", ", ".join(inst) or "no"),
+                  ("Formats", ", ".join(formats) or "-"), ("Summary", e["summary"]["en"] or "-"), ("Repository", links["repository"]),
+                  ("Docs", links.get("docs") or "-"), ("Release", f"{e['release']['tag']} ({e['release']['date']})" if e.get("release") else "-"),
+                  ("Updated", e.get("updated") or "-")]
+        if args.rtk:
+            print("|".join(f"{k.lower()}={v}" for k, v in fields) + "|packages=" + ",".join(f"{p['name']}:{p['version']}" for p in e["packages"]))
+            continue
+        if n:
+            print()
+        for k, v in fields:
+            print(f"{k:<12}: {v}")
+        for i, p in enumerate(e["packages"]):
+            mark = " [installed]" if p["name"] in have else ""
+            print(f"{'Packages' if i == 0 else '':<12}: {p['name']} {p['version']}  {p['description']}{mark}")
+    return RETURN.OK
+
+def cmd_links(args: argparse.Namespace) -> int: # Every link of the packages
+    settings, entries = load()
+    for e in select(entries, args.names, args):
+        links = urls(settings, e)
+        if e.get("private"):
+            links["mirror"] = str(FILES.MIRROR / e["repo"])
+        if args.rtk:
+            print(f"{e['name']}|" + "|".join(f"{k}={v}" for k, v in links.items() if v))
+            continue
+        print(e["name"])
+        for k, v in links.items():
+            if v:
+                print(f"  {k:<11}{v}")
+    return RETURN.OK
+
+def cmd_mirror(args: argparse.Namespace) -> int: # Clone / pull the gh-pages branch of the package repositories
+    settings, entries = load(private=True)
+    repos = getattr(args, "repos", None)
+    if repos is not None:
+        targets = [e for e in entries if e["repo"] in repos]
+    elif args.names:
+        targets = select(entries, args.names, args)
+    else:
+        targets = [e for e in entries if args.all or e.get("private")]
+    if not targets:
+        print("Nothing to mirror (no private source in private.toml, --all for every source).")
+        return RETURN.OK
+    code = RETURN.OK
+    FILES.MIRROR.mkdir(parents=True, exist_ok=True)
+    for e in targets:
+        dest = FILES.MIRROR / e["repo"]
+        url = f"git@github.com:{settings['owner']}/{e['repo']}.git"
+        if (dest / ".git").is_dir():
+            ok = subprocess.run(["git", "-C", str(dest), "fetch", "-q", "--depth", "1", "origin", "gh-pages"]).returncode == 0
+            ok = ok and subprocess.run(["git", "-C", str(dest), "reset", "-q", "--hard", "FETCH_HEAD"]).returncode == 0
+        else:
+            ok = subprocess.run(["git", "clone", "-q", "--depth", "1", "--single-branch", "--branch", "gh-pages", url, str(dest)]).returncode == 0
+        print(f"✓ {e['name']} mirrored in {dest}" if ok else f"Error: cannot mirror {e['name']} ({url})")
+        code |= RETURN.OK if ok else ERROR.ACTION
+    return code
+
+##### Program #####
+parser = argparse.ArgumentParser(prog="universe", description="Set up, install and update the packages of my-universe")
+parser.add_argument("--rtk", action="store_true", help="compact output (one line per package), made for an AI")
+commands = parser.add_subparsers(dest="command", required=True, metavar="command")
+
+def add(name: str, func, help: str, names: bool = False, filters: bool = False, root: bool = False, online: bool = False) -> argparse.ArgumentParser:
+    sub = commands.add_parser(name, help=help, description=help)
+    sub.set_defaults(func=func)
+    if names:
+        sub.add_argument("names", nargs="*", metavar="NAME", help="package names (all: every package)")
+    if filters:
+        sub.add_argument("--hand-made", action="store_true", help="only the hand-made packages")
+        sub.add_argument("--ai-made", action="store_true", help="only the ai-made packages")
+    if root:
+        sub.add_argument("--dry-run", action="store_true", help="print the commands, change nothing")
+        sub.add_argument("--no-sudo", action="store_true", help="run the root commands without sudo")
+    if online:
+        sub.add_argument("--online", action="store_true", help="read the package repositories instead of packages.json")
+    return sub
+
+setup = add("setup", cmd_setup, "register the package repositories (key + dnf / apt / pacman sources)", root=True)
+setup.add_argument("--private", action="store_true", help="also the private sources (local mirror, cloned when missing)")
+install = add("install", cmd_install, "install packages", names=True, filters=True, root=True)
+install.add_argument("--pre", action="store_true", help="install the -pre (pre-release) packages")
+install.add_argument("-y", "--yes", action="store_true", help="answer yes to the package manager")
+update = add("update", cmd_update, "refresh the mirror, then upgrade the installed universe packages", root=True)
+update.add_argument("-y", "--yes", action="store_true", help="answer yes to the package manager")
+add("list", cmd_list, "every package: category, versions, installed, formats", filters=True, online=True)
+add("outdated", cmd_outdated, "installed packages with a newer version (exit 1 when there is one)", online=True)
+add("info", cmd_info, "everything about one / every package, installed or not", names=True, online=True)
+add("links", cmd_links, "repository, docs, release, package repository, key, mirror of each package", names=True)
+mirror = add("mirror", cmd_mirror, "clone / pull the gh-pages of the private package repositories", names=True)
+mirror.add_argument("--all", action="store_true", help="every source, not only the private ones (offline copy)")
+
+args = parser.parse_args()
+if args.command == "install" and not args.names and not (args.hand_made or args.ai_made):
+    parser.error("install: give package names, 'all', --hand-made or --ai-made")
+try:
+    exit(args.func(args))
+except KeyboardInterrupt:
+    exit(ERROR.ACTION)
