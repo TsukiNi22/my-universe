@@ -1,0 +1,9 @@
+# Private sources (never published)
+private.toml
+
+# Generated site (deployed on gh-pages by the workflow)
+dist/
+
+# Python
+__pycache__/
+*.pyc

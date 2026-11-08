@@ -1,0 +1,39 @@
+# Packages of my-universe: one [[source]] per repository whose gh-pages branch holds a package repository
+# (fedora/ rpm, debian/ deb, arch/ pacman), every format and version is read from there by scripts/update.py
+#
+# Private repositories never go here (this file is public): put them in private.toml (git ignored, same format),
+# only the local `universe` CLI reads it, through a mirror cloned with your own git access
+
+[universe]
+owner = "TsukiNi22"                                 # GitHub owner of every source
+pages = "https://tsukini22.github.io"               # GitHub Pages root of the owner
+site = "https://tsukini22.github.io/my-universe"    # Site of my-universe (gh-pages of this repository)
+key = "RPM-GPG-KEY-tsukini"                         # Signing key shared by every package repository (copy in site/)
+fingerprint = "69B8284D99B9A729C5BE935B067035C6A7DFA916"  # Fingerprint of that key (pacman-key --lsign-key)
+
+[[source]]
+name = "libutils"                                   # Name used by the CLI and the site
+repo = "libutils"                                   # GitHub repository (its gh-pages holds the packages)
+category = "hand-made"                              # hand-made | ai-made
+main = "libutils"                                   # Package installed by `universe install libutils`
+summary_en = "C++20 library for many different tools: arguments, exceptions, network, IPC, cli, maths..."
+summary_fr = "Bibliothèque C++20 pour plein d'outils : arguments, exceptions, réseau, IPC, cli, maths..."
+docs = "https://tsukini22.github.io/libutils/docs/"
+
+[[source]]
+name = "brain"
+repo = "banana-brain"
+category = "hand-made"
+main = "libbrain"
+summary_en = "C++20 neural network library with several kinds of networks (banana included)"
+summary_fr = "Bibliothèque C++20 de réseaux de neurones avec plusieurs types de réseaux (banane incluse)"
+docs = "https://tsukini22.github.io/banana-brain/docs/"
+
+[[source]]
+name = "context-forge"
+repo = "context-forge"
+category = "hand-made"
+main = "context-forge"
+summary_en = "Formatting of compiler output (stderr) with ollama and other means, for C++ compilers"
+summary_fr = "Mise en forme de la sortie des compilateurs (stderr) avec ollama et d'autres moyens, pour le C++"
+docs = "https://tsukini22.github.io/context-forge/"
