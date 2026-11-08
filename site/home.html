@@ -1,0 +1,90 @@
+<main>
+<header class="hero">
+  <div class="page-eyebrow">my-universe <span class="badge">@@COUNT@@ <span data-lang="en">packages</span><span data-lang="fr">paquets</span></span></div>
+  <h1><span data-lang="en">Every package of my projects</span><span data-lang="fr">Tous les paquets de mes projets</span></h1>
+  <p class="lead"><span data-lang="en">One repository for <code>dnf</code>, <code>apt</code> and <code>pacman</code>, a catalog and a CLI, checked every day at 00:00 UTC.</span><span data-lang="fr">Un seul dépôt pour <code>dnf</code>, <code>apt</code> et <code>pacman</code>, un catalogue et une CLI, vérifiés chaque jour à 00:00 UTC.</span></p>
+  <div class="sbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search a package" placeholder="Search a package…  ( / )" data-ph-fr="Rechercher un paquet…  ( / )"><ul class="results" hidden></ul></div>
+  <div class="stats">
+    <span><span data-lang="en">Last update</span><span data-lang="fr">Dernière mise à jour</span> <b>@@UPDATED@@</b></span>
+    <span><span data-lang="en">Checked</span><span data-lang="fr">Vérifié</span> <b>@@CHECKED@@</b></span>
+    @@CATEGORY_STATS@@
+  </div>
+</header>
+
+<section id="install">
+  <h2><span data-lang="en">1. Get everything</span><span data-lang="fr">1. Tout récupérer</span></h2>
+  <p><span data-lang="en">The script detects the distribution (<code>rpm</code>, <code>deb</code> or <code>arch</code> based), imports the signing key and registers every package repository of the universe. A repository already set up on its own (ex: <code>/etc/yum.repos.d/libutils.repo</code>) is kept and skipped.</span><span data-lang="fr">Le script détecte la distribution (base <code>rpm</code>, <code>deb</code> ou <code>arch</code>), importe la clé de signature et déclare tous les dépôts de paquets de l'univers. Un dépôt déjà configuré seul (ex : <code>/etc/yum.repos.d/libutils.repo</code>) est gardé et ignoré.</span></p>
+  <div class="ctabs" data-tabs="oneliner"><button type="button" data-tab="curl">curl</button><button type="button" data-tab="wget">wget</button></div>
+  <div class="ctab-panel" data-tabs="oneliner" data-tab="curl"><pre data-title="bash"><code>curl -fsSL @@SITE@@/install.sh | bash -s</code></pre></div>
+  <div class="ctab-panel" data-tabs="oneliner" data-tab="wget"><pre data-title="bash"><code>wget -qO- @@SITE@@/install.sh | bash -s</code></pre></div>
+  <div class="table-wrap" role="region" tabindex="0" aria-label="Arguments of install.sh"><table>
+    <thead><tr><th scope="col"><span data-lang="en">Argument</span><span data-lang="fr">Argument</span></th><th scope="col"><span data-lang="en">Effect</span><span data-lang="fr">Effet</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>--only a,b</code></td><td><span data-lang="en">Register only these packages</span><span data-lang="fr">Ne déclarer que ces paquets</span></td></tr>
+      <tr><td><code>--no-sudo</code></td><td><span data-lang="en">Run without <code>sudo</code> (the script must already run as root)</span><span data-lang="fr">Lancer sans <code>sudo</code> (le script doit déjà tourner en root)</span></td></tr>
+      <tr><td><code>--dry-run</code></td><td><span data-lang="en">Print what would be done, change nothing</span><span data-lang="fr">Afficher ce qui serait fait, sans rien changer</span></td></tr>
+      <tr><td><code>-h</code>, <code>--help</code></td><td><span data-lang="en">Display the usage</span><span data-lang="fr">Afficher l'aide</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3 id="manual"><span data-lang="en">By hand</span><span data-lang="fr">À la main</span></h3>
+  <div class="ctabs" data-tabs="manual"><button type="button" data-tab="rpm">Fedora</button><button type="button" data-tab="deb">Debian / Ubuntu</button><button type="button" data-tab="arch">Arch</button></div>
+  <div class="ctab-panel" data-tabs="manual" data-tab="rpm"><pre data-title="bash"><code>sudo curl -fsSL -o /etc/yum.repos.d/universe.repo @@SITE@@/universe.repo
+sudo rpm --import @@SITE@@/@@KEY@@</code></pre></div>
+  <div class="ctab-panel" data-tabs="manual" data-tab="deb"><pre data-title="bash"><code>sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL @@SITE@@/@@KEY@@ | gpg --dearmor | sudo tee /etc/apt/keyrings/universe.gpg > /dev/null
+sudo curl -fsSL -o /etc/apt/sources.list.d/universe.list @@SITE@@/universe.list
+sudo apt-get update</code></pre></div>
+  <div class="ctab-panel" data-tabs="manual" data-tab="arch"><pre data-title="bash"><code>curl -fsSL -o /tmp/universe.key @@SITE@@/@@KEY@@
+sudo pacman-key --add /tmp/universe.key
+sudo pacman-key --lsign-key @@FINGERPRINT@@
+curl -fsSL @@SITE@@/universe.conf | sudo tee -a /etc/pacman.conf > /dev/null
+sudo pacman -Sy</code></pre></div>
+  <h3 id="cli"><span data-lang="en">With the CLI</span><span data-lang="fr">Avec la CLI</span></h3>
+  <p><span data-lang="en">The <code>universe</code> command of the repository does the same, then installs, updates and describes the packages (<code>dnf info</code> style).</span><span data-lang="fr">La commande <code>universe</code> du dépôt fait la même chose, puis installe, met à jour et décrit les paquets (façon <code>dnf info</code>).</span></p>
+  <pre data-title="bash"><code>git clone https://github.com/@@OWNER@@/my-universe.git &amp;&amp; cd my-universe
+./universe setup                    # register the package repositories
+./universe install all --hand-made  # install every hand-made package (--pre: pre-release)
+./universe info libutils            # versions, formats, sub-packages, installed or not
+./universe outdated                 # installed vs latest version
+./universe update                   # upgrade the installed universe packages</code></pre>
+</section>
+
+<section id="packages">
+  <h2><span data-lang="en">2. Packages</span><span data-lang="fr">2. Paquets</span></h2>
+  <div class="filters">
+    <div class="seg" role="group" aria-label="Category" data-filter="category"><button type="button" data-value="all" class="on" aria-pressed="true"><span data-lang="en">All</span><span data-lang="fr">Tous</span></button>@@CATEGORY_BUTTONS@@</div>
+    <div class="seg" role="group" aria-label="Format" data-filter="format"><button type="button" data-value="all" class="on" aria-pressed="true"><span data-lang="en">All</span><span data-lang="fr">Tous</span></button><button type="button" data-value="rpm" aria-pressed="false">rpm</button><button type="button" data-value="deb" aria-pressed="false">deb</button><button type="button" data-value="arch" aria-pressed="false">arch</button></div>
+    <div class="seg" role="group" aria-label="Channel" data-filter="channel"><button type="button" data-value="stable" class="on" aria-pressed="true">stable</button><button type="button" data-value="pre" aria-pressed="false">pre</button></div>
+    <input class="pkg-filter" type="search" autocomplete="off" aria-label="Filter the packages" placeholder="Filter…" data-ph-fr="Filtrer…">
+  </div>
+  <p class="callout empty-filter" hidden><span data-lang="en">No package matches these filters.</span><span data-lang="fr">Aucun paquet ne correspond à ces filtres.</span></p>
+  @@GROUPS@@
+</section>
+
+<section id="files">
+  <h2><span data-lang="en">3. Repository files</span><span data-lang="fr">3. Fichiers du dépôt</span></h2>
+  <p><span data-lang="en">Everything is generated from the package repositories of each project: my-universe only points to them, nothing is copied.</span><span data-lang="fr">Tout est généré depuis les dépôts de paquets de chaque projet : my-universe ne fait que pointer vers eux, rien n'est copié.</span></p>
+  <div class="table-wrap" role="region" tabindex="0" aria-label="Files of the site"><table>
+    <thead><tr><th scope="col"><span data-lang="en">File</span><span data-lang="fr">Fichier</span></th><th scope="col"><span data-lang="en">Content</span><span data-lang="fr">Contenu</span></th></tr></thead>
+    <tbody>
+      <tr><td><a href="universe.repo"><code>universe.repo</code></a></td><td><span data-lang="en">Every rpm repository, for <code>/etc/yum.repos.d/</code></span><span data-lang="fr">Tous les dépôts rpm, pour <code>/etc/yum.repos.d/</code></span></td></tr>
+      <tr><td><a href="universe.list"><code>universe.list</code></a></td><td><span data-lang="en">Every deb repository, for <code>/etc/apt/sources.list.d/</code> (key in <code>/etc/apt/keyrings/universe.gpg</code>)</span><span data-lang="fr">Tous les dépôts deb, pour <code>/etc/apt/sources.list.d/</code> (clé dans <code>/etc/apt/keyrings/universe.gpg</code>)</span></td></tr>
+      <tr><td><a href="universe.conf"><code>universe.conf</code></a></td><td><span data-lang="en">Every pacman repository, to append to <code>/etc/pacman.conf</code></span><span data-lang="fr">Tous les dépôts pacman, à ajouter à <code>/etc/pacman.conf</code></span></td></tr>
+      <tr><td><a href="install.sh"><code>install.sh</code></a></td><td><span data-lang="en">The setup script above</span><span data-lang="fr">Le script d'installation ci-dessus</span></td></tr>
+      <tr><td><a href="index.json"><code>index.json</code></a></td><td><span data-lang="en">The whole catalog (versions, formats, sub-packages, links, dates)</span><span data-lang="fr">Tout le catalogue (versions, formats, sous-paquets, liens, dates)</span></td></tr>
+      <tr><td><a href="@@KEY@@"><code>@@KEY@@</code></a></td><td><span data-lang="en">Signing key of every package repository</span><span data-lang="fr">Clé de signature de tous les dépôts de paquets</span> (<code>@@FINGERPRINT@@</code>)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="badges">
+  <h2><span data-lang="en">4. Badges</span><span data-lang="fr">4. Badges</span></h2>
+  <p><span data-lang="en">Every badge is a <a href="https://shields.io/badges/endpoint-badge">shields.io endpoint</a> regenerated with the catalog: paste the Markdown in a README.</span><span data-lang="fr">Chaque badge est un <a href="https://shields.io/badges/endpoint-badge">endpoint shields.io</a> régénéré avec le catalogue : colle le Markdown dans un README.</span></p>
+  <div class="table-wrap" role="region" tabindex="0" aria-label="Badges"><table>
+    <thead><tr><th scope="col">Badge</th><th scope="col">Endpoint</th></tr></thead>
+    <tbody>@@BADGES@@</tbody>
+  </table></div>
+  <pre data-title="Markdown"><code>@@BADGES_MD@@</code></pre>
+</section>
+</main>
+@@INDEX@@
