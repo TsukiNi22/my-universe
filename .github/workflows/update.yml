@@ -1,0 +1,85 @@
+name: Universe - Update (CI/CD)
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # every day at 00:00 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'sources.toml'
+      - 'scripts/**'
+      - 'site/**'
+      - '.github/workflows/update.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: universe-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ${{ vars.RUNNER }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    container:
+      image: ghcr.io/tsukini22/ci:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Read the package repositories
+        id: update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          python3 scripts/update.py --github-output
+
+      - name: Render the README and the site
+        run: |
+          set -euo pipefail
+          python3 scripts/render.py --readme README.md --site dist
+          echo "✓ render ok"
+
+      - name: Commit the new versions
+        env:
+          SUMMARY: ${{ steps.update.outputs.summary }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- packages.json README.md; then
+            echo "✓ packages.json and README.md unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add packages.json README.md
+          git commit -q -m "chore(packages): update versions (${SUMMARY:-catalog})"
+          git pull -q --rebase origin main
+          git push -q origin HEAD:main
+          echo "✓ versions committed: ${SUMMARY:-catalog}"
+
+      - name: Deploy the site on gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          cd dist
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "docs(site): deploy ${GITHUB_SHA::7}"
+          if ! git push -q --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages; then
+            echo "::error title=Deploy::cannot push the site on the gh-pages branch"
+            exit 1
+          fi
+          echo "✓ site deployed on gh-pages"
