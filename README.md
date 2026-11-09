@@ -40,6 +40,7 @@ The packages stay in the gh-pages repository of each project, my-universe only r
 | Name + Link | Version | Pre-release | Formats | Release | Last Update | Content |
 | ----------- | ------- | ----------- | ------- | ------- | ----------- | ------- |
 | [xstyle](https://github.com/TsukiNi22/xstyle) | `1.0.0` | - | `rpm` `deb` `arch` | [v1.0.0](https://github.com/TsukiNi22/xstyle/releases/tag/v1.0.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/xstyle) | Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules |
+| [xdesk](https://github.com/TsukiNi22/xdesk) | `1.0.0` | - | `rpm` `deb` `arch` | [v1.0.0](https://github.com/TsukiNi22/xdesk/releases/tag/v1.0.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/xdesk) | Remote desktop and terminal in one binary (Windows / Unix), Qt6 or TTY, TLS 1.3 post-quantum |
 <!-- universe:catalog:end -->
 
 ## Quick Setup - 1 (All)
