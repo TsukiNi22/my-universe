@@ -39,7 +39,7 @@ The packages stay in the gh-pages repository of each project, my-universe only r
 
 | Name + Link | Version | Pre-release | Formats | Release | Last Update | Content |
 | ----------- | ------- | ----------- | ------- | ------- | ----------- | ------- |
-| [xstyle](https://github.com/TsukiNi22/xstyle) | `-` | - | - | - | ![](https://img.shields.io/github/last-commit/TsukiNi22/xstyle) | Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules |
+| [xstyle](https://github.com/TsukiNi22/xstyle) | `1.0.0` | - | `rpm` `deb` `arch` | [v1.0.0](https://github.com/TsukiNi22/xstyle/releases/tag/v1.0.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/xstyle) | Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules |
 <!-- universe:catalog:end -->
 
 ## Quick Setup - 1 (All)

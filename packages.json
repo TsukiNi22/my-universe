@@ -362,11 +362,56 @@
       "repository": "https://github.com/TsukiNi22/xstyle",
       "pages": "https://tsukini22.github.io/xstyle",
       "docs": "https://tsukini22.github.io/xstyle/docs/",
-      "formats": {},
-      "version": "",
+      "formats": {
+        "rpm": {
+          "releases": [
+            "44"
+          ],
+          "arches": [
+            "x86_64"
+          ]
+        },
+        "deb": {
+          "arches": [
+            "amd64"
+          ]
+        },
+        "arch": {
+          "db": "xstyle",
+          "arches": [
+            "x86_64"
+          ]
+        }
+      },
+      "version": "1.0.0-1",
       "pre": "",
-      "release": null,
-      "packages": [],
+      "release": {
+        "tag": "v1.0.0",
+        "date": "2026-11-09",
+        "url": "https://github.com/TsukiNi22/xstyle/releases/tag/v1.0.0"
+      },
+      "packages": [
+        {
+          "name": "xstyle",
+          "version": "1.0.0-1",
+          "description": "Coding style checker / fixer (global)"
+        },
+        {
+          "name": "xstyle-as",
+          "version": "1.0.0-1",
+          "description": "Coding style checker / fixer (asan)"
+        },
+        {
+          "name": "xstyle-db",
+          "version": "1.0.0-1",
+          "description": "Coding style checker / fixer (debug)"
+        },
+        {
+          "name": "xstyle-op",
+          "version": "1.0.0-1",
+          "description": "Coding style checker / fixer (optimized)"
+        }
+      ],
       "updated": "2026-11-09"
     }
   ]
