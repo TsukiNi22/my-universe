@@ -3,7 +3,7 @@
   "pages": "https://tsukini22.github.io",
   "site": "https://tsukini22.github.io/my-universe",
   "key": "RPM-GPG-KEY-tsukini",
-  "updated": "2026-11-08",
+  "updated": "2026-11-09",
   "sources": [
     {
       "name": "libutils",
@@ -348,6 +348,26 @@
         }
       ],
       "updated": "2026-11-08"
+    },
+    {
+      "name": "xstyle",
+      "repo": "xstyle",
+      "category": "ai-made",
+      "private": false,
+      "main": "xstyle",
+      "summary": {
+        "en": "Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules",
+        "fr": "Vérificateur et correcteur de mon style de code : C++20 / libutils d'abord, puis Python, shell, Rust, CMake et règles génériques"
+      },
+      "repository": "https://github.com/TsukiNi22/xstyle",
+      "pages": "https://tsukini22.github.io/xstyle",
+      "docs": "https://tsukini22.github.io/xstyle/docs/",
+      "formats": {},
+      "version": "",
+      "pre": "",
+      "release": null,
+      "packages": [],
+      "updated": "2026-11-09"
     }
   ]
 }

@@ -37,3 +37,12 @@ main = "context-forge"
 summary_en = "Formatting of compiler output (stderr) with ollama and other means, for C++ compilers"
 summary_fr = "Mise en forme de la sortie des compilateurs (stderr) avec ollama et d'autres moyens, pour le C++"
 docs = "https://tsukini22.github.io/context-forge/"
+
+[[source]]
+name = "xstyle"
+repo = "xstyle"
+category = "ai-made"
+main = "xstyle"
+summary_en = "Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules"
+summary_fr = "Vérificateur et correcteur de mon style de code : C++20 / libutils d'abord, puis Python, shell, Rust, CMake et règles génériques"
+docs = "https://tsukini22.github.io/xstyle/docs/"
