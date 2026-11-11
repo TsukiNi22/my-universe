@@ -3,7 +3,7 @@
   "pages": "https://tsukini22.github.io",
   "site": "https://tsukini22.github.io/my-universe",
   "key": "RPM-GPG-KEY-tsukini",
-  "updated": "2026-11-09",
+  "updated": "2026-11-11",
   "sources": [
     {
       "name": "libutils",
@@ -225,11 +225,11 @@
         }
       },
       "version": "1.0.0-1",
-      "pre": "",
+      "pre": "1.2.0-5",
       "release": {
-        "tag": "v1.0.0",
+        "tag": "old-v1.0.0",
         "date": "2026-10-30",
-        "url": "https://github.com/TsukiNi22/banana-brain/releases/tag/v1.0.0"
+        "url": "https://github.com/TsukiNi22/banana-brain/releases/tag/old-v1.0.0"
       },
       "packages": [
         {
@@ -243,8 +243,18 @@
           "description": "C++20 neural network library (asan)"
         },
         {
+          "name": "libbrain-as-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (asan)"
+        },
+        {
           "name": "libbrain-db",
           "version": "1.0.0-1",
+          "description": "C++20 neural network library (debug)"
+        },
+        {
+          "name": "libbrain-db-pre",
+          "version": "1.2.0-5",
           "description": "C++20 neural network library (debug)"
         },
         {
@@ -258,8 +268,18 @@
           "description": "C++20 neural network library (headers/cmake)"
         },
         {
+          "name": "libbrain-dev-as-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
           "name": "libbrain-dev-db",
           "version": "1.0.0-1",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "libbrain-dev-db-pre",
+          "version": "1.2.0-5",
           "description": "C++20 neural network library (headers/cmake)"
         },
         {
@@ -268,9 +288,29 @@
           "description": "C++20 neural network library (headers/cmake)"
         },
         {
+          "name": "libbrain-dev-op-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "libbrain-dev-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
           "name": "libbrain-op",
           "version": "1.0.0-1",
           "description": "C++20 neural network library (optimized)"
+        },
+        {
+          "name": "libbrain-op-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (optimized)"
+        },
+        {
+          "name": "libbrain-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (global)"
         },
         {
           "name": "mingw64-libbrain",
@@ -280,6 +320,11 @@
         {
           "name": "mingw64-libbrain-db",
           "version": "1.0.0-1",
+          "description": "C++20 neural network library (debug)"
+        },
+        {
+          "name": "mingw64-libbrain-db-pre",
+          "version": "1.2.0-5",
           "description": "C++20 neural network library (debug)"
         },
         {
@@ -293,17 +338,42 @@
           "description": "C++20 neural network library (headers/cmake)"
         },
         {
+          "name": "mingw64-libbrain-dev-db-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
           "name": "mingw64-libbrain-dev-op",
           "version": "1.0.0-1",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libbrain-dev-op-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libbrain-dev-pre",
+          "version": "1.2.0-5",
           "description": "C++20 neural network library (headers/cmake)"
         },
         {
           "name": "mingw64-libbrain-op",
           "version": "1.0.0-1",
           "description": "C++20 neural network library (optimized)"
+        },
+        {
+          "name": "mingw64-libbrain-op-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (optimized)"
+        },
+        {
+          "name": "mingw64-libbrain-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (global)"
         }
       ],
-      "updated": "2026-11-08"
+      "updated": "2026-11-11"
     },
     {
       "name": "context-forge",

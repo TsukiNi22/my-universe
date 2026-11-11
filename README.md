@@ -32,7 +32,7 @@ The packages stay in the gh-pages repository of each project, my-universe only r
 | Name + Link | Version | Pre-release | Formats | Release | Last Update | Content |
 | ----------- | ------- | ----------- | ------- | ------- | ----------- | ------- |
 | [libutils](https://github.com/TsukiNi22/libutils) | `4.2.0` | `4.3.1-47` | `rpm` `deb` `arch` | [v4.2.0](https://github.com/TsukiNi22/libutils/releases/tag/v4.2.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/libutils) | C++20 library for many different tools: arguments, exceptions, network, IPC, cli, maths... |
-| [brain](https://github.com/TsukiNi22/banana-brain) | `1.0.0` | - | `rpm` `deb` `arch` | [v1.0.0](https://github.com/TsukiNi22/banana-brain/releases/tag/v1.0.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/banana-brain) | C++20 neural network library with several kinds of networks (banana included) |
+| [brain](https://github.com/TsukiNi22/banana-brain) | `1.0.0` | `1.2.0-5` | `rpm` `deb` `arch` | [old-v1.0.0](https://github.com/TsukiNi22/banana-brain/releases/tag/old-v1.0.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/banana-brain) | C++20 neural network library with several kinds of networks (banana included) |
 | [context-forge](https://github.com/TsukiNi22/context-forge) | `1.0.0` | - | `rpm` `deb` | [v1.0.0](https://github.com/TsukiNi22/context-forge/releases/tag/v1.0.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/context-forge) | Formatting of compiler output (stderr) with ollama and other means, for C++ compilers |
 
 ### ai-made
