@@ -1,0 +1,8 @@
+# my-universe: every package repository of https://tsukini22.github.io/my-universe
+# Generated on 2026-11-14, the packages stay in the gh-pages of each project
+
+deb [arch=amd64 signed-by=/etc/apt/keyrings/universe.gpg] https://tsukini22.github.io/libutils/debian stable main
+deb [arch=amd64 signed-by=/etc/apt/keyrings/universe.gpg] https://tsukini22.github.io/banana-brain/debian stable main
+deb [arch=amd64 signed-by=/etc/apt/keyrings/universe.gpg] https://tsukini22.github.io/context-forge/debian stable main
+deb [arch=amd64 signed-by=/etc/apt/keyrings/universe.gpg] https://tsukini22.github.io/xstyle/debian stable main
+deb [arch=amd64 signed-by=/etc/apt/keyrings/universe.gpg] https://tsukini22.github.io/xdesk/debian stable main

@@ -1,0 +1,1397 @@
+<!doctype html>
+<html data-channel-view="stable" lang="en" data-storage-key="my-universe">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>my-universe</title>
+<style>
+/* Visual system of the user's HTML pages (source: html-doc/templates/technical.html, R-Type doc colors +
+   context-forge layout). Inlined in each page by scripts/new_page.py: pages stay self-contained. */
+:root {
+  color-scheme: light; /* the fields, the scrollbars and the rest drawn by the browser follow the theme */
+  accent-color: var(--accent);
+  --bg: #efede8;
+  --surface: #f7f5f0;
+  --text: #1d1f23;
+  --muted: #5d636e;
+  --border: #dad6cd;
+  --accent: #2f5bd3;
+  --accent-soft: #e6ecfb;
+  --warn: #a8540a;
+  --warn-soft: #fbefe3;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f4ea;
+  --code-bg: #e9e6df;
+  --node: #f7f5f0;
+  --node-alt: #eef1f8;
+  --line: #868c97;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #15171b;
+    --surface: #1d2025;
+    --text: #e6e7ea;
+    --muted: #9aa0ab;
+    --border: #30343b;
+    --accent: #7d9cf0;
+    --accent-soft: #232c45;
+    --warn: #f0a868;
+    --warn-soft: #3a2a1b;
+    --ok: #6fcf97;
+    --ok-soft: #1b3326;
+    --code-bg: #24272d;
+    --node: #23262c;
+    --node-alt: #283043;
+    --line: #747a85;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #15171b;
+  --surface: #1d2025;
+  --text: #e6e7ea;
+  --muted: #9aa0ab;
+  --border: #30343b;
+  --accent: #7d9cf0;
+  --accent-soft: #232c45;
+  --warn: #f0a868;
+  --warn-soft: #3a2a1b;
+  --ok: #6fcf97;
+  --ok-soft: #1b3326;
+  --code-bg: #24272d;
+  --node: #23262c;
+  --node-alt: #283043;
+  --line: #747a85;
+}
+/* scrollbars: thin, a transparent track, a rounded thumb in the theme (never the wide grey bar of the browser on hover) */
+* { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--line) 55%, transparent) transparent; }
+*:hover { scrollbar-color: var(--line) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--line) 55%, transparent); background-clip: padding-box; border: 3px solid transparent; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--line); background-clip: padding-box; border-width: 2px; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+main { min-width: 0; }
+header h1 { font-size: 34px; line-height: 1.2; margin: 0 0 8px; }
+header p { color: var(--muted); margin: 0 0 32px; max-width: 70ch; }
+section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  scroll-margin-top: 72px;
+}
+h2 { font-size: 22px; margin: 0 0 16px; }
+h3 { font-size: 17px; margin: 28px 0 10px; }
+/* What a page may hold without a class of its own: never a default of the browser. :where(): any rule of a component wins */
+:where(h4) { font-size: 15.5px; margin: 22px 0 8px; }
+:where(h5) { font-size: 14.5px; margin: 18px 0 6px; }
+:where(h6) { font-size: 13px; margin: 16px 0 6px; color: var(--muted); }
+:where(hr) { border: 0; border-top: 1px solid var(--border); margin: 24px 0; }
+:where(blockquote) { margin: 16px 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--border); color: var(--muted); }
+:where(kbd) { font: 0.82em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
+:where(mark) { background: color-mix(in srgb, var(--warn) 28%, transparent); color: var(--text); border-radius: 3px; padding: 0 3px; }
+:where(samp) { font: 0.9em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+:where(abbr[title]) { text-decoration: underline dotted var(--muted); cursor: help; }
+:where(small) { font-size: 13px; }
+:where(sub, sup) { line-height: 0; }
+:where(details) { margin: 12px 0; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; }
+:where(summary) { cursor: pointer; font-weight: 600; }
+:where(details[open] > summary) { margin-bottom: 8px; }
+:where(dl) { margin: 12px 0; }
+:where(dt) { font-weight: 600; }
+:where(dd) { margin: 0 0 8px 16px; }
+:where(caption) { caption-side: top; text-align: left; color: var(--muted); font-size: 13px; padding-bottom: 6px; }
+:where(fieldset) { margin: 12px 0; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; min-width: 0; }
+:where(legend) { padding: 0 6px; color: var(--muted); font-size: 13px; font-weight: 600; }
+:where(input:not([type=checkbox], [type=radio], [type=range], [type=color], [type=file]), select, textarea) { font: inherit; font-size: 14.5px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; max-width: 100%; }
+:where(input, select, textarea)::placeholder { color: var(--muted); opacity: 1; }
+:where(input, select, textarea):focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+:where(button:not([class])) { font: inherit; font-size: 14px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+:where(button:not([class])):hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+:where(button:not([class])):focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:where(button:disabled) { opacity: .55; cursor: not-allowed; }
+:where(progress, meter) { max-width: 100%; }
+p, li { max-width: 75ch; }
+a { color: var(--accent); }
+code {
+  font: 0.9em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font: 13.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+pre code { background: none; padding: 0; }
+.table-wrap { overflow-x: auto; margin: 12px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+td pre { margin: 0; }
+td > :first-child { margin-top: 0; }
+td > :last-child { margin-bottom: 0; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+.callout {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  padding: 12px 16px;
+  border-radius: 0 6px 6px 0;
+  margin: 16px 0;
+}
+.callout.warn { background: var(--warn-soft); border-left-color: var(--warn); }
+.callout.ok { background: var(--ok-soft); border-left-color: var(--ok); }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+figure { margin: 20px 0; }
+figure svg { width: 100%; height: auto; display: block; }
+figcaption { color: var(--muted); font-size: 13px; margin-top: 6px; }
+:where(main, figure, .stepper, .diagram) svg text { fill: var(--text); } /* any text of a drawing: the theme's colour, no weight (every class below wins) */
+svg .box { fill: var(--node); stroke: var(--line); stroke-width: 1.2; }
+svg .box-alt { fill: var(--node-alt); stroke: var(--accent); stroke-width: 1.2; }
+svg .group { fill: none; stroke: var(--border); stroke-width: 1.5; stroke-dasharray: 5 4; }
+svg .lbl { fill: var(--text); font: 13px system-ui, sans-serif; }
+svg .small { fill: var(--muted); font: 11.5px system-ui, sans-serif; }
+svg .title { fill: var(--muted); font: 600 12px system-ui, sans-serif; letter-spacing: .05em; }
+svg .mono { fill: var(--text); font: 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; } /* values, code, file content */
+svg .mono-s { fill: var(--text); font: 11.5px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+svg .edge { stroke: var(--line); stroke-width: 1.4; fill: none; }
+svg .edge-accent { stroke: var(--accent); stroke-width: 1.6; fill: none; }
+svg .dash { stroke-dasharray: 4 4; }
+svg .arrow { fill: var(--line); }
+svg .arrow-accent { fill: var(--accent); }
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 18px;
+  height: 56px; padding: 0 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.tabs { display: flex; gap: 4px; margin-left: 8px; overflow-x: auto; }
+.tabs[hidden] { display: none; }
+.tabs a {
+  padding: 6px 12px; border-radius: 6px;
+  color: var(--muted); text-decoration: none; font-size: 14px; white-space: nowrap;
+}
+.tabs a:hover { color: var(--text); background: var(--code-bg); }
+.tabs a.current { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.topbar .spacer { flex: 1; }
+.topbar .tabs { scrollbar-width: none; } /* a long name squeezes the tabs: they scroll, no bar in the bar */
+.topbar .tabs::-webkit-scrollbar { display: none; }
+.topbar .top-actions { margin-left: auto; } /* on the right even when no tab or spacer pushes them (small screens) */
+.icon-btn {
+  display: grid; place-items: center;
+  width: 36px; height: 36px; padding: 0;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--border); border-radius: 50%;
+  cursor: pointer; text-decoration: none;
+  transition: border-color .15s, color .15s;
+}
+.icon-btn:hover { color: var(--accent); border-color: var(--accent); }
+.icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icon-btn svg { width: 18px; height: 18px; }
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; padding: 24px 16px 60px; gap: 16px; }
+  .topbar { gap: 10px; padding: 0 12px; }
+  .brand .ver { display: none; }
+  .menu-btn { display: grid; }
+  .sidebar { position: fixed; top: 56px; left: 0; bottom: 0; z-index: 25; width: min(300px, 85vw); max-height: none; padding: 16px 10px; background: var(--bg); border-right: 1px solid var(--border); transform: translateX(-105%); transition: transform .2s; }
+  .sidebar.open { transform: none; box-shadow: 0 10px 40px rgba(0, 0, 0, .25); }
+  section { padding: 20px 16px; }
+  header h1 { font-size: 27px; }
+}
+/* Language switch (EN / FR pill) */
+.lang-switch {
+  display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+  border: 1.5px solid var(--border); border-radius: 999px; background: var(--surface);
+}
+.lang-switch button {
+  border: 0; background: none; color: var(--text); cursor: pointer;
+  font: 600 12.5px system-ui, sans-serif; letter-spacing: .03em;
+  padding: 4px 11px; border-radius: 999px; transition: background .2s, color .2s;
+}
+.lang-switch button.on { background: var(--accent); color: var(--surface); }
+.lang-switch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Theme switch: blue track + sun (light), black track + moon and stars (dark) */
+.theme-switch {
+  position: relative; width: 58px; height: 30px; flex: none; padding: 0; border: 0; border-radius: 999px;
+  background: #2196f3; cursor: pointer; transition: background .3s;
+}
+.theme-switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.theme-switch .knob {
+  position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center; transition: transform .3s, background .3s;
+}
+.theme-switch .knob svg { width: 22px; height: 22px; }
+.theme-switch .sun { display: block; }
+.theme-switch .moon, .theme-switch .stars { display: none; }
+.theme-switch .stars { position: absolute; inset: 0; }
+.theme-switch .stars i { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #fff; }
+.theme-switch .stars i:nth-child(1) { left: 9px; top: 9px; }
+.theme-switch .stars i:nth-child(2) { left: 16px; top: 18px; width: 1.5px; height: 1.5px; }
+.theme-switch .stars i:nth-child(3) { left: 21px; top: 8px; width: 1.5px; height: 1.5px; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-switch { background: #0b0b0d; box-shadow: inset 0 0 0 1px #2a2c31; }
+  :root:not([data-theme="light"]) .theme-switch .knob { transform: translateX(28px); background: #ffffff; }
+  :root:not([data-theme="light"]) .theme-switch .sun { display: none; }
+  :root:not([data-theme="light"]) .theme-switch .moon, :root:not([data-theme="light"]) .theme-switch .stars { display: block; }
+}
+:root[data-theme="dark"] .theme-switch { background: #0b0b0d; box-shadow: inset 0 0 0 1px #2a2c31; }
+:root[data-theme="dark"] .theme-switch .knob { transform: translateX(28px); background: #ffffff; }
+:root[data-theme="dark"] .theme-switch .sun { display: none; }
+:root[data-theme="dark"] .theme-switch .moon, :root[data-theme="dark"] .theme-switch .stars { display: block; }
+/* Bilingual content: only the active language is shown */
+:root[lang="en"] [data-lang="fr"], :root[lang="fr"] [data-lang="en"] { display: none !important; }
+/* ---------- Header: logo + version badge, mobile menu ---------- */
+.brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 700; white-space: nowrap; }
+.brand .logo { width: 26px; height: 26px; flex: none; color: var(--accent); object-fit: contain; }
+.brand { min-width: 0; }
+.brand .repo-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.brand .ver { font-size: 12px; color: var(--muted); font-weight: 500; padding: 2px 6px; border: 1px solid var(--border); border-radius: 6px; }
+.brand .ver:empty { display: none; } /* no version: the name alone */
+.menu-btn { display: none; }
+/* ---------- Sidebar tree (pages > sections of the current page) ---------- */
+.sidebar { position: sticky; top: 80px; align-self: start; max-height: calc(100vh - 100px); overflow-y: auto; font-size: 14px; }
+@media (max-width: 860px) { .sidebar { position: fixed; top: 56px; max-height: none; } } /* off-canvas menu: out of the flow */
+.sidebar p { margin: 0 0 8px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-size: 12px; }
+.sidebar a { display: block; padding: 5px 10px; color: var(--muted); text-decoration: none; border-left: 2px solid var(--border); }
+.sidebar a:hover, .sidebar a.active { color: var(--accent); border-left-color: var(--accent); }
+/* ---------- Page header: eyebrow + title + lead ---------- */
+.page-eyebrow { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: 6px; }
+header .lead { font-size: 17px; color: var(--muted); margin: 0 0 32px; max-width: 70ch; }
+/* ---------- Heading anchors ---------- */
+h2 .anchor, h3 .anchor { margin-left: 8px; color: var(--muted); font-weight: 400; text-decoration: none; opacity: 0; transition: opacity .15s; }
+h2:hover .anchor, h3:hover .anchor, .anchor:focus { opacity: 1; }
+/* ---------- Code blocks: title bar + copy button ---------- */
+pre { position: relative; }
+pre[data-title]::before {
+  content: attr(data-title); display: block; margin: -14px -16px 12px; padding: 6px 16px;
+  font: 12px system-ui, sans-serif; color: var(--muted); border-bottom: 1px solid var(--border);
+  background: var(--surface); border-radius: 7px 7px 0 0;
+}
+pre .copy {
+  position: absolute; top: 8px; right: 8px; font: 12px system-ui, sans-serif; cursor: pointer;
+  border: 1px solid var(--border); background: var(--surface); color: var(--muted);
+  border-radius: 6px; padding: 3px 8px; opacity: 0; transition: opacity .15s;
+}
+pre[data-title] .copy { top: 5px; }
+pre[data-title]::before { white-space: normal; overflow-wrap: anywhere; padding-right: 72px; } /* a long title wraps: never under the Copy button, never past the block */
+.figure-scroll { overflow-x: auto; } /* a drawing on a small screen scrolls in its box (base.js), its labels stay readable */
+.figure-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+pre:hover .copy, pre .copy:focus { opacity: 1; }
+pre .copy:hover { color: var(--text); }
+/* ---------- Content tabs ---------- */
+.ctabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid var(--border); margin: 12px 0; }
+.ctabs button { background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 8px 12px; cursor: pointer; color: var(--muted); font: 500 14px system-ui, sans-serif; }
+.ctabs button.active { color: var(--accent); border-bottom-color: var(--accent); }
+.ctab-panel { display: none; }
+.ctab-panel.active { display: block; }
+/* ---------- Previous / next page ---------- */
+.pager { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; }
+.pager a { flex: 1; padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); text-decoration: none; }
+.pager a:hover { border-color: var(--accent); }
+.pager a span { display: block; font-size: 12px; color: var(--muted); }
+.pager a.next { text-align: right; }
+.pager:empty { display: none; }
+/* ---------- Footer ---------- */
+/* RGAA 12.7: skip link, first focusable element of the page (visible only when focused); the target is the main region */
+.skip-link { position: absolute; left: 8px; top: -64px; z-index: 1000; padding: 10px 14px; border-radius: 8px; background: var(--accent); color: var(--surface); font-weight: 600; text-decoration: none; }
+.skip-link:focus, .skip-link:focus-visible { top: 8px; outline: 2px solid var(--text); outline-offset: 2px; }
+.skip-link code { color: var(--surface); }
+main:focus { outline: none; }
+/* RGAA 7.3: a block that scrolls (code, table) is reached and scrolled with the keyboard */
+pre:focus-visible, .table-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+footer.site { max-width: 1180px; margin: 0 auto; padding: 22px 24px 30px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+footer.site a { color: var(--accent); }
+@media (max-width: 860px) {
+  .menu-btn { display: grid; }
+  footer.site { padding: 20px 16px; }
+  .topbar .tabs { display: none; } /* the sidebar (menu) gives the navigation on mobile */
+}
+.topbar .icon-btn, .topbar .lang-switch, .topbar .theme-switch { flex: none; }
+.topbar .tabs { min-width: 0; }
+@media (max-width: 860px) {
+  .topbar .spacer { display: none; }
+  .topbar .tabs { flex: 1 1 auto; }
+  .topbar .icon-btn { width: 32px; height: 32px; }
+}
+@media (max-width: 480px) {
+  .topbar { gap: 8px; padding: 0 10px; }
+  .topbar a.icon-btn[href] { display: none; } /* GitHub link: also in the footer / graph panel */
+  .lang-switch button { padding: 4px 9px; }
+}
+@media (min-width: 1340px) {
+  .layout { grid-template-columns: minmax(0, 1fr) minmax(0, 880px) minmax(0, 1fr); max-width: none; }
+  .layout > .sidebar { grid-column: 1; justify-self: end; width: 230px; }
+  .layout > main { grid-column: 2; }
+  footer.site { max-width: 880px; }
+}
+/* ---------- No scroll beyond the page ---------- */
+html, body { overscroll-behavior: none; }
+/* ---------- Top right actions: same height, grouped, divider ---------- */
+.top-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+.top-actions .divider { width: 1px; height: 22px; background: var(--border); margin: 0 2px; }
+.top-actions .icon-btn { width: 34px; height: 34px; }
+.top-actions .lang-switch { height: 34px; padding: 3px; background: var(--code-bg); border: 1px solid var(--border); }
+.top-actions .lang-switch button { height: 26px; padding: 0 10px; font-size: 12px; }
+.top-actions .theme-switch { width: 56px; height: 30px; border: 1px solid transparent; }
+.top-actions .theme-switch .knob { top: 2px; left: 2px; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .top-actions .theme-switch { border-color: var(--border); box-shadow: none; }
+  :root:not([data-theme="light"]) .top-actions .theme-switch .knob { transform: translateX(26px); }
+}
+:root[data-theme="dark"] .top-actions .theme-switch { border-color: var(--border); box-shadow: none; }
+:root[data-theme="dark"] .top-actions .theme-switch .knob { transform: translateX(26px); }
+@media (max-width: 480px) { .top-actions .divider { display: none; } }
+/* ---------- Responsive: phones, tablets, touch screens, notches, TVs, print ---------- */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+img, video, canvas, svg { max-width: 100%; }
+img, video { height: auto; }
+main, footer.site, .sidebar { overflow-wrap: break-word; }
+code { overflow-wrap: anywhere; }
+pre, pre code { overflow-wrap: normal; }
+td code, th code { overflow-wrap: inherit; } /* base.js: a cell that keeps its words whole unless one is too long for any column */
+.sidebar { max-height: calc(100vh - 100px); max-height: calc(100dvh - 100px); overscroll-behavior: contain; }
+/* Notches and rounded corners (viewport-fit=cover): the content stays inside the safe area */
+.topbar { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
+.layout { padding-left: max(24px, env(safe-area-inset-left)); padding-right: max(24px, env(safe-area-inset-right)); }
+footer.site { padding-bottom: max(30px, env(safe-area-inset-bottom)); }
+/* Very large screens (TV, 4K): a bigger base so the page stays readable at a distance */
+@media (min-width: 1900px) { body { font-size: 18px; } }
+@media (min-width: 2600px) { body { font-size: 21px; } }
+/* Tablets and small laptops: tighter column gap */
+@media (min-width: 861px) and (max-width: 1100px) { .layout { gap: 24px; grid-template-columns: 210px minmax(0, 1fr); } }
+@media (max-width: 860px) {
+  .topbar { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
+  .layout { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  .sidebar { top: 56px; bottom: 0; height: auto; align-self: stretch; max-height: none; padding-bottom: max(16px, env(safe-area-inset-bottom)); overflow-y: auto; } /* the menu down to the bottom of the screen, not the height of its links */
+  input, select, textarea { font-size: 16px; } /* under 16px iOS zooms the page on focus */
+  table { font-size: 13.5px; }
+  th, td { padding: 6px 8px; }
+  pre { font-size: 12.5px; padding: 12px; }
+  pre[data-title]::before { margin: -12px -12px 12px; padding-left: 12px; } /* the padding of the block: else its title bar is wider than it and it scrolls for nothing */
+  .formula { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+@media (max-width: 600px) {
+  .pager { flex-direction: column; }
+  .pager a.next { text-align: left; }
+  section { border-radius: 8px; }
+  h2 { font-size: 20px; }
+  .ctabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .ctabs button { white-space: nowrap; flex: none; }
+}
+@media (max-width: 480px) {
+  .layout { padding-top: 16px; }
+  header h1 { font-size: 24px; }
+  header .lead { font-size: 16px; }
+  .callout { padding: 10px 12px; }
+}
+/* Phone held sideways: little height, keep the bar slim */
+@media (max-height: 480px) and (orientation: landscape) {
+  .topbar { height: 48px; }
+  .sidebar { top: 48px; }
+  section { scroll-margin-top: 56px; }
+}
+/* Touch (no hover): what only showed on hover is always there, and targets are finger sized */
+@media (hover: none) {
+  pre .copy { opacity: 1; }
+  pre:not([data-title]):not([data-nocopy]) { padding-top: 40px; } /* the Copy button always there: above the code, not over it */
+  h2 .anchor, h3 .anchor { opacity: 1; }
+  dfn[data-def] { cursor: pointer; }
+}
+@media (pointer: coarse) {
+  .icon-btn { width: 44px; height: 44px; }
+  .topbar .icon-btn { width: 40px; height: 40px; } /* over the size of a small screen: a finger first */
+  pre:not([data-title]):not([data-nocopy]) { padding-top: 50px; }
+  .top-actions .icon-btn { width: 40px; height: 40px; }
+  .tabs a, .ctabs button, .sidebar a { min-height: 44px; display: flex; align-items: center; }
+  .sidebar a { padding-top: 0; padding-bottom: 0; }
+  .lang-switch button, .top-actions .lang-switch button { min-height: 32px; min-width: 38px; }
+  pre .copy { padding: 8px 12px; font-size: 13px; }
+  summary { min-height: 44px; padding-block: 10px; } /* still a list item: its marker kept, a long word wraps */
+  .pager a, .btn { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+@media (forced-colors: active) {
+  .theme-switch, .lang-switch, .icon-btn { border: 1px solid ButtonText; }
+  .tabs a.current, .ctabs button.active, .lang-switch button.on { outline: 2px solid Highlight; }
+}
+@media print {
+  :root, :root[data-theme="dark"], :root:not([data-theme="light"]) {
+    color-scheme: light;
+    --bg: #ffffff; --surface: #ffffff; --text: #1d1f23; --muted: #5d636e; --border: #dad6cd; --accent: #2f5bd3; --accent-soft: #e6ecfb;
+    --warn: #a8540a; --warn-soft: #fbefe3; --ok: #1f7a4a; --ok-soft: #e3f4ea; --code-bg: #e9e6df; --node: #f7f5f0; --node-alt: #eef1f8; --line: #868c97;
+  }
+  .table-wrap, .figure-scroll { overflow: visible; }
+  td, th { white-space: normal !important; min-width: 0 !important; } /* base.js fits a table to the screen, not to the paper */
+  .topbar, .sidebar, .pager, .menu-btn, pre .copy, .top-actions, .h-anchor, .anchor { display: none !important; }
+  .layout { display: block; max-width: none; padding: 0; }
+  section { break-inside: avoid-page; border: 0; padding: 0 0 12px; background: none; }
+  pre { white-space: pre-wrap; overflow: visible; }
+  body { background: var(--bg); color: var(--text); }
+  a { color: inherit; }
+}
+
+/* better-html-style - the documentation site style (from the claude-cluster docs), on top of html-style: home hero, search
+   box and results, section tiles, sidebar groups, page meta, changelog list, kinds of results; phone / tablet / print */
+.layout.wide { grid-template-columns: minmax(0, 1fr); max-width: 1040px; margin-left: auto; margin-right: auto; }
+/* a page without sidebar (the home): its column centered at every width (html-style puts main in column 2 from 1340px) */
+@media (min-width: 1340px) { .layout.wide { max-width: 1040px; } .layout.wide > main { grid-column: 1; } }
+.embed .topbar, .embed footer.site { display: none; }
+.embed .sidebar { top: 0; }
+/* what a link reaches (a section, a heading, a message) stays visible under what sticks on top: the bar, the search of a phone */
+main, main [id] { scroll-margin-top: 72px; }
+.embed main, .embed main [id] { scroll-margin-top: 16px; }
+
+/* ----- home ----- */
+.hero { text-align: center; padding: 28px 0 8px; }
+.hero h1 { font-size: 40px; margin: 0 0 6px; }
+.hero .lead { margin: 0 auto 18px; }
+.badge { display: inline-block; max-width: 100%; padding: 2px 10px; border: 1px solid var(--border); border-radius: 999px; font: 13px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--muted); background: var(--surface); text-transform: none; letter-spacing: 0; overflow-wrap: anywhere; } /* a version, a commit: never the capitals of the eyebrow */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(290px, 100%), 1fr)); gap: 16px; margin: 24px 0; }
+.tile { display: block; padding: 20px 22px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); text-decoration: none; transition: border-color .15s, background .15s; }
+.tile:hover { border-color: var(--accent); background: var(--code-bg); }
+.tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tile h2 { margin: 8px 0 4px; font-size: 17px; } /* a tile is a section of the home: h2 under the h1 (RGAA 9.1) */
+.tile p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.tile svg { width: 26px; height: 26px; color: var(--accent); }
+.tile .count { float: right; font-size: 12.5px; color: var(--muted); }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; } /* minmax(0): a wide table or code scrolls in its column, never pushes it out of the card */
+.links { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 8px 0 0; }
+.links a { min-width: 0; padding: 6px 14px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); text-decoration: none; overflow-wrap: anywhere; }
+.links a:hover { border-color: var(--accent); }
+.cl { list-style: none; margin: 0; padding: 0; }
+.cl li { display: flex; gap: 12px; max-width: none; padding: 8px 0; border-top: 1px solid var(--border); }
+.cl li:first-child { border-top: 0; }
+.cl b { flex: none; min-width: 56px; max-width: 38%; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 600; overflow-wrap: anywhere; } /* a long version wraps in its column, the text keeps the width of the row */
+.cl li > span { flex: 1; min-width: 0; max-width: 75ch; overflow-wrap: anywhere; }
+
+/* ----- search ----- */
+.sbox { position: relative; max-width: 640px; margin: 0 auto; text-align: left; }
+.sbox input { display: block; width: 100%; box-sizing: border-box; padding: 14px 16px 14px 44px; font: inherit; font-size: 17px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+.sbox input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.sbox > svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--muted); pointer-events: none; }
+.sbox.small input { padding: 7px 10px 7px 34px; font-size: 14.5px; }
+.sbox.small > svg { left: 10px; width: 16px; height: 16px; }
+.sbox kbd.hint { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 12px; pointer-events: none; }
+.sbox input:focus ~ kbd.hint, .sbox input:not(:placeholder-shown) ~ kbd.hint { display: none; }
+.results { position: absolute; z-index: 40; left: 0; right: 0; top: calc(100% + 6px); margin: 0; padding: 6px; list-style: none; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 10px 40px rgba(0, 0, 0, .2); max-height: 60vh; overflow: auto; }
+.results[hidden] { display: none; }
+.results a { display: flex; gap: 10px; align-items: baseline; padding: 8px 10px; border-radius: 6px; color: var(--text); text-decoration: none; }
+.results li.sel a, .results a:hover { background: var(--code-bg); }
+.results .t { flex: 1 1 60%; min-width: 0; overflow-wrap: anywhere; }
+.results .d { display: block; font-size: 13px; color: var(--muted); }
+.results mark { background: var(--accent-soft); color: var(--accent); border-radius: 3px; padding: 0 1px; }
+.results .none { padding: 10px; color: var(--muted); }
+.kind { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+.results .kind { flex: 0 1 auto; max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* a long kind never takes the room of its title */
+.kind.docs, .kind.page { color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+.kind.settings, .kind.config { color: var(--warn); background: var(--warn-soft); border-color: transparent; }
+.kind.tools, .kind.api, .kind.message, .kind.protocol { color: var(--ok); background: var(--ok-soft); border-color: transparent; }
+.kind.keys, .kind.explain { color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+/* the bar holds everything on one line at any width: its name gives way first, then the search */
+.topbar .brand { flex-shrink: 100; min-width: 28px; }
+.topbar .top-actions { flex: 0 1 auto; min-width: 0; }
+.top-actions .divider { flex: none; }
+.topbar .sbox.small { flex: 0 1 260px; width: 260px; min-width: 110px; margin: 0 8px; }
+.topbar .sbox.small .results { left: auto; right: 0; width: 440px; max-width: calc(100vw - 24px); }
+/* a narrow bar: the switches after the box leave it far from the right of the screen, the results hold to the screen, never past its left edge */
+@media (max-width: 1100px) { .topbar .sbox.small .results { position: fixed; top: 62px; right: 12px; width: min(440px, calc(100vw - 24px)); } }
+@media (max-width: 1100px) and (max-height: 480px) and (orientation: landscape) { .topbar .sbox.small .results { top: 54px; } }
+.sbox.small.mob { position: sticky; top: 56px; z-index: 19; width: auto; margin: 0; padding: 8px 12px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.embed .sbox.small.mob { top: 0; } /* the embedded copy has no top bar: the very top */
+@media (max-height: 480px) and (orientation: landscape) { .sbox.small.mob { top: 48px; } .embed .sbox.small.mob { top: 0; } }
+.sbox.small.mob > svg { left: 22px; }
+.sbox.small.mob .results, .topbar .sbox.small.mob .results { left: 12px; right: 12px; width: auto; }
+
+/* ----- pages ----- */
+kbd { display: inline-block; max-width: 100%; white-space: normal; overflow-wrap: break-word; padding: 0 6px; font: 12.5px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--text); background: var(--code-bg); border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 4px; }
+.sidebar .grp { margin: 16px 0 4px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.sidebar a.cur { color: var(--accent); font-weight: 600; }
+.sidebar hr { border: 0; border-top: 1px solid var(--border); margin: 12px 0; }
+.brand .logo { width: 28px; height: 28px; }
+header p:has(+ .page-meta) { margin-bottom: 12px; }
+.page-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 24px; font-size: 13px; color: var(--muted); } /* close to the lead, not stuck on the first card */
+.page-meta > * { min-width: 0; overflow-wrap: anywhere; }
+.page-meta a { color: var(--muted); }
+.page-meta a:hover { color: var(--accent); }
+main pre { overflow-x: auto; }
+main li > ul, main li > ol { margin-top: 4px; }
+.callout.planned { border-left-color: var(--warn); }
+.pill { display: inline-block; max-width: 100%; padding: 0 8px; overflow-wrap: anywhere; border-radius: 999px; font-size: 12px; border: 1px solid var(--border); color: var(--muted); }
+details.more { margin: 14px 0; padding: 0; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+details.more > summary { cursor: pointer; padding: 10px 14px; font-weight: 600; }
+details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details.more > div { padding: 0 14px 6px; }
+.feedback { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 24px; padding: 14px 18px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.feedback > span { min-width: 0; overflow-wrap: anywhere; }
+.feedback button { padding: 5px 14px; font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; }
+.feedback button:hover { border-color: var(--accent); }
+.feedback button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ----- responsive ----- */
+@media (max-width: 860px) { .two { grid-template-columns: minmax(0, 1fr); } .hero h1 { font-size: 30px; } .topbar .sbox.small { flex-basis: 200px; width: 200px; } .sbox.small input { font-size: 16px; } .sbox kbd.hint { display: none; } } /* 16px: under it iOS zooms the page on focus; the hint: the box may be too small for it */
+@media (max-width: 480px) { body:has(.sbox.small) .hero .sbox { display: none; } } /* a phone: the search under the top bar only (never two, one in the middle of the home) */
+@media (max-width: 480px) { .tile { padding: 16px; } .hero { padding-top: 12px; } .hero h1 { font-size: 26px; } .sbox input { font-size: 16px; } main, main [id] { scroll-margin-top: 128px; } .embed main, .embed main [id] { scroll-margin-top: 72px; } } /* the bar + the search under it */
+@media (pointer: coarse) { .results a { min-height: 44px; align-items: center; } .links a { min-height: 44px; display: inline-flex; align-items: center; } .topbar .menu-btn { width: 40px; height: 40px; } summary { display: list-item; } } /* a summary keeps its marker: a flex one loses it */
+@media print {
+  .topbar, .sidebar, .pager, .feedback, .sbox, .page-meta a.edit, .keys-toggle { display: none !important; }
+  /* paper does not scroll: the short cells docTables kept on one line wrap there and the table is denser, so that a wide one fits the page */
+  table { font-size: 12px; }
+  th, td { padding: 4px 6px; white-space: normal !important; }
+}
+
+/* RGAA 12.10: the one-character shortcut of the search can be turned off */
+.sbox kbd.hint[hidden] { display: none; }
+.keys-toggle { display: inline-flex; align-items: center; gap: 8px; margin-left: 16px; cursor: pointer; }
+@media (max-width: 480px) { .keys-toggle { display: flex; margin: 6px 0 0; } } /* its own line under the text of the footer, not indented */
+.keys-toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
+.keys-toggle input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (pointer: coarse) { .keys-toggle { display: none; } }
+/* my-universe - catalog: stats of the hero, filters, package cards, categories, stable / pre channel */
+.stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; margin-top: 14px; color: var(--muted); font-size: 14px; }
+.stats b { color: var(--text); font-weight: 600; }
+
+/* Filters */
+.filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 4px 0 18px; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.seg button { min-height: 34px; padding: 4px 12px; border: 0; border-right: 1px solid var(--border); background: none; color: var(--muted); font: inherit; font-size: 14px; cursor: pointer; }
+.seg button:last-child { border-right: 0; }
+.seg button:hover { background: var(--code-bg); color: var(--text); }
+.seg button.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.seg button:focus-visible, .pkg-filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pkg-filter { flex: 1 1 160px; min-width: 0; min-height: 34px; padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); font: inherit; font-size: 14px; }
+
+/* Groups and cards */
+.cat-group { margin-top: 22px; }
+.cat-group > h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
+.cat-group > h3 .count { color: var(--muted); font-size: 13px; font-weight: 400; }
+.pkgs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.pkg { min-width: 0; padding: 18px 20px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); scroll-margin-top: 72px; }
+.pkg:target { border-color: var(--accent); }
+.pkg-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.pkg-head h4 { margin: 0; font-size: 18px; overflow-wrap: anywhere; }
+.pkg-head h4 a { color: var(--text); text-decoration: none; }
+.pkg-head h4 a:hover { color: var(--accent); }
+.pkg-head .spacer { flex: 1 1 auto; }
+.pkg p.sum { margin: 8px 0 10px; color: var(--muted); }
+.pkg .fmts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.pkg .links { justify-content: flex-start; margin: 10px 0 0; }
+.pkg .page-meta { margin-top: 10px; color: var(--muted); font-size: 13px; }
+.pkg pre { margin: 8px 0 0; }
+.pkg details.more { margin-top: 10px; }
+.pill.cat-hand-made { color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+.pill.cat-ai-made { color: var(--ok); background: var(--ok-soft); border-color: transparent; }
+.badge.pre { color: var(--warn); border-color: var(--warn); }
+.none-yet { color: var(--muted); }
+
+/* Channel: what is not of the chosen channel is hidden */
+html[data-channel-view="stable"] [data-channel="pre"], html[data-channel-view="pre"] [data-channel="stable"] { display: none; }
+
+@media (max-width: 480px) {
+  .pkg { padding: 14px 14px; }
+  .filters .seg { flex: 1 1 100%; }
+  .seg button { flex: 1 1 auto; }
+}
+@media (pointer: coarse) {
+  .seg button, .pkg-filter { min-height: 44px; }
+}
+@media print {
+  .filters, .sbox { display: none; }
+  html[data-channel-view] [data-channel] { display: inline; }
+}
+
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n>Skip to the content</a>
+<header class="topbar">
+  <button class="icon-btn menu-btn" type="button" id="menuBtn" aria-label="Open the navigation" data-i18n-aria-label><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="#top"><svg class="logo" viewBox="0 0 32 32" fill="none" aria-hidden="true"><g transform="rotate(-20 16 18)"><path d="M3 18a13 4.2 0 0 1 26 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="18" r="7.5" fill="currentColor"/><path d="M3 18a13 4.2 0 0 0 26 0" stroke="var(--surface)" stroke-width="4.5" stroke-linecap="round"/><path d="M3 18a13 4.2 0 0 0 26 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></g><circle cx="26.5" cy="5.5" r="1.7" fill="currentColor"/></svg><span class="repo-name">my-universe</span><span class="ver repo-version"></span></a>
+  <nav class="tabs" aria-label="Pages" hidden></nav>
+  <span class="spacer"></span>
+  <div class="top-actions">
+  <div class="lang-switch" role="group" aria-label="Language" data-i18n-aria-label>
+    <button type="button" data-set-lang="en" class="on">EN</button>
+    <button type="button" data-set-lang="fr">FR</button>
+  </div>
+  <span class="divider" aria-hidden="true"></span><div class="sbox small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search" data-i18n-aria-label placeholder="Search…" data-ph-fr="Rechercher…"><kbd class="hint" aria-hidden="true">/</kbd><ul class="results" hidden></ul></div>
+<a class="icon-btn" href="https://github.com/TsukiNi22/my-universe" aria-label="GitHub repository" data-i18n-aria-label title="GitHub repository" data-i18n-title><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+  <button class="theme-switch" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="Toggle theme" data-i18n-aria-label title="Toggle theme" data-i18n-title>
+    <span class="stars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="knob" aria-hidden="true">
+      <svg class="sun" viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="5.2"/><g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"><path d="M12 1.8v2.6M12 19.6v2.6M1.8 12h2.6M19.6 12h2.6M4.8 4.8l1.8 1.8M17.4 17.4l1.8 1.8M4.8 19.2l1.8-1.8M17.4 6.6l1.8-1.8"/></g></svg>
+      <svg class="moon" viewBox="0 0 24 24"><path d="M15.6 4.2a8 8 0 1 0 4.2 11.6A7 7 0 0 1 15.6 4.2z" fill="#f6c343"/></svg>
+    </span>
+  </button>
+  </div>
+</header>
+<div class="layout wide" id="top">
+<main id="main" tabindex="-1">
+<header class="hero">
+  <div class="page-eyebrow">my-universe <span class="badge">5 <span data-lang="en">packages</span><span data-lang="fr">paquets</span></span></div>
+  <h1><span data-lang="en">Every package of my projects</span><span data-lang="fr">Tous les paquets de mes projets</span></h1>
+  <p class="lead"><span data-lang="en">One repository for <code>dnf</code>, <code>apt</code> and <code>pacman</code>, a catalog and a CLI, checked every day at 00:00 UTC.</span><span data-lang="fr">Un seul dépôt pour <code>dnf</code>, <code>apt</code> et <code>pacman</code>, un catalogue et une CLI, vérifiés chaque jour à 00:00 UTC.</span></p>
+  <div class="sbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" autocomplete="off" aria-label="Search a package" placeholder="Search a package…  ( / )" data-ph-fr="Rechercher un paquet…  ( / )"><ul class="results" hidden></ul></div>
+  <div class="stats">
+    <span><span data-lang="en">Last update</span><span data-lang="fr">Dernière mise à jour</span> <b>2026-11-14</b></span>
+    <span><span data-lang="en">Checked</span><span data-lang="fr">Vérifié</span> <b>2026-11-14 04:00 UTC</b></span>
+    <span><span class="pill cat-hand-made">hand-made</span> <b>3</b></span> <span><span class="pill cat-ai-made">ai-made</span> <b>2</b></span>
+  </div>
+</header>
+
+<section id="install">
+  <h2><span data-lang="en">1. Get everything</span><span data-lang="fr">1. Tout récupérer</span></h2>
+  <p><span data-lang="en">The script detects the distribution (<code>rpm</code>, <code>deb</code> or <code>arch</code> based), imports the signing key and registers every package repository of the universe. A repository already set up on its own (ex: <code>/etc/yum.repos.d/libutils.repo</code>) is kept and skipped.</span><span data-lang="fr">Le script détecte la distribution (base <code>rpm</code>, <code>deb</code> ou <code>arch</code>), importe la clé de signature et déclare tous les dépôts de paquets de l'univers. Un dépôt déjà configuré seul (ex : <code>/etc/yum.repos.d/libutils.repo</code>) est gardé et ignoré.</span></p>
+  <div class="ctabs" data-tabs="oneliner"><button type="button" data-tab="curl">curl</button><button type="button" data-tab="wget">wget</button></div>
+  <div class="ctab-panel" data-tabs="oneliner" data-tab="curl"><pre data-title="bash"><code>curl -fsSL https://tsukini22.github.io/my-universe/install.sh | bash -s</code></pre></div>
+  <div class="ctab-panel" data-tabs="oneliner" data-tab="wget"><pre data-title="bash"><code>wget -qO- https://tsukini22.github.io/my-universe/install.sh | bash -s</code></pre></div>
+  <div class="table-wrap" role="region" tabindex="0" aria-label="Arguments of install.sh"><table>
+    <thead><tr><th scope="col"><span data-lang="en">Argument</span><span data-lang="fr">Argument</span></th><th scope="col"><span data-lang="en">Effect</span><span data-lang="fr">Effet</span></th></tr></thead>
+    <tbody>
+      <tr><td><code>--only a,b</code></td><td><span data-lang="en">Register only these packages</span><span data-lang="fr">Ne déclarer que ces paquets</span></td></tr>
+      <tr><td><code>--no-sudo</code></td><td><span data-lang="en">Run without <code>sudo</code> (the script must already run as root)</span><span data-lang="fr">Lancer sans <code>sudo</code> (le script doit déjà tourner en root)</span></td></tr>
+      <tr><td><code>--dry-run</code></td><td><span data-lang="en">Print what would be done, change nothing</span><span data-lang="fr">Afficher ce qui serait fait, sans rien changer</span></td></tr>
+      <tr><td><code>-h</code>, <code>--help</code></td><td><span data-lang="en">Display the usage</span><span data-lang="fr">Afficher l'aide</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3 id="manual"><span data-lang="en">By hand</span><span data-lang="fr">À la main</span></h3>
+  <div class="ctabs" data-tabs="manual"><button type="button" data-tab="rpm">Fedora</button><button type="button" data-tab="deb">Debian / Ubuntu</button><button type="button" data-tab="arch">Arch</button></div>
+  <div class="ctab-panel" data-tabs="manual" data-tab="rpm"><pre data-title="bash"><code>sudo curl -fsSL -o /etc/yum.repos.d/universe.repo https://tsukini22.github.io/my-universe/universe.repo
+sudo rpm --import https://tsukini22.github.io/my-universe/RPM-GPG-KEY-tsukini</code></pre></div>
+  <div class="ctab-panel" data-tabs="manual" data-tab="deb"><pre data-title="bash"><code>sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://tsukini22.github.io/my-universe/RPM-GPG-KEY-tsukini | gpg --dearmor | sudo tee /etc/apt/keyrings/universe.gpg > /dev/null
+sudo curl -fsSL -o /etc/apt/sources.list.d/universe.list https://tsukini22.github.io/my-universe/universe.list
+sudo apt-get update</code></pre></div>
+  <div class="ctab-panel" data-tabs="manual" data-tab="arch"><pre data-title="bash"><code>curl -fsSL -o /tmp/universe.key https://tsukini22.github.io/my-universe/RPM-GPG-KEY-tsukini
+sudo pacman-key --add /tmp/universe.key
+sudo pacman-key --lsign-key 69B8284D99B9A729C5BE935B067035C6A7DFA916
+curl -fsSL https://tsukini22.github.io/my-universe/universe.conf | sudo tee -a /etc/pacman.conf > /dev/null
+sudo pacman -Sy</code></pre></div>
+  <h3 id="cli"><span data-lang="en">With the CLI</span><span data-lang="fr">Avec la CLI</span></h3>
+  <p><span data-lang="en">The <code>universe</code> command of the repository does the same, then installs, updates and describes the packages (<code>dnf info</code> style).</span><span data-lang="fr">La commande <code>universe</code> du dépôt fait la même chose, puis installe, met à jour et décrit les paquets (façon <code>dnf info</code>).</span></p>
+  <pre data-title="bash"><code>git clone https://github.com/TsukiNi22/my-universe.git &amp;&amp; cd my-universe
+./universe setup                    # register the package repositories
+./universe install all --hand-made  # install every hand-made package (--pre: pre-release)
+./universe info libutils            # versions, formats, sub-packages, installed or not
+./universe outdated                 # installed vs latest version
+./universe update                   # upgrade the installed universe packages</code></pre>
+</section>
+
+<section id="packages">
+  <h2><span data-lang="en">2. Packages</span><span data-lang="fr">2. Paquets</span></h2>
+  <div class="filters">
+    <div class="seg" role="group" aria-label="Category" data-filter="category"><button type="button" data-value="all" class="on" aria-pressed="true"><span data-lang="en">All</span><span data-lang="fr">Tous</span></button><button type="button" data-value="hand-made" aria-pressed="false">hand-made</button><button type="button" data-value="ai-made" aria-pressed="false">ai-made</button></div>
+    <div class="seg" role="group" aria-label="Format" data-filter="format"><button type="button" data-value="all" class="on" aria-pressed="true"><span data-lang="en">All</span><span data-lang="fr">Tous</span></button><button type="button" data-value="rpm" aria-pressed="false">rpm</button><button type="button" data-value="deb" aria-pressed="false">deb</button><button type="button" data-value="arch" aria-pressed="false">arch</button></div>
+    <div class="seg" role="group" aria-label="Channel" data-filter="channel"><button type="button" data-value="stable" class="on" aria-pressed="true">stable</button><button type="button" data-value="pre" aria-pressed="false">pre</button></div>
+    <input class="pkg-filter" type="search" autocomplete="off" aria-label="Filter the packages" placeholder="Filter…" data-ph-fr="Filtrer…">
+  </div>
+  <p class="callout empty-filter" hidden><span data-lang="en">No package matches these filters.</span><span data-lang="fr">Aucun paquet ne correspond à ces filtres.</span></p>
+  <div class="cat-group" data-category="hand-made"><h3 id="hand-made"><span class="pill cat-hand-made">hand-made</span><span class="count">3</span></h3><div class="pkgs"><article class="pkg" id="pkg-libutils" data-category="hand-made" data-formats="rpm deb arch" data-search="libutils libutils libutils hand-made rpm deb arch C++20 library for many different tools: arguments, exceptions, network, IPC, cli, maths... Bibliothèque C++20 pour plein d&#x27;outils : arguments, exceptions, réseau, IPC, cli, maths... libutils libutils-as libutils-as-pre libutils-db libutils-db-pre libutils-dev libutils-dev-as libutils-dev-as-pre libutils-dev-db libutils-dev-db-pre libutils-dev-op libutils-dev-op-pre libutils-dev-pre libutils-op libutils-op-pre libutils-pre mingw64-libutils mingw64-libutils-db mingw64-libutils-db-pre mingw64-libutils-dev mingw64-libutils-dev-db mingw64-libutils-dev-db-pre mingw64-libutils-dev-op mingw64-libutils-dev-op-pre mingw64-libutils-dev-pre mingw64-libutils-op mingw64-libutils-op-pre mingw64-libutils-pre"><div class="pkg-head"><h4><a href="#pkg-libutils">libutils</a></h4><span class="pill cat-hand-made">hand-made</span><span class="spacer"></span><span class="badge" data-channel="stable">4.2.0</span><span class="badge pre" data-channel="pre">4.3.1-47 pre</span></div><p class="sum"><span data-lang="en">C++20 library for many different tools: arguments, exceptions, network, IPC, cli, maths...</span><span data-lang="fr">Bibliothèque C++20 pour plein d&#x27;outils : arguments, exceptions, réseau, IPC, cli, maths...</span></p><div class="fmts"><span class="pill">rpm</span><span class="pill">deb</span><span class="pill">arch</span></div><div class="ctabs" data-tabs="cmd-libutils" data-distro><button type="button" data-tab="rpm">Fedora</button><button type="button" data-tab="deb">Debian / Ubuntu</button><button type="button" data-tab="arch">Arch</button><button type="button" data-tab="cli">universe</button></div><div class="ctab-panel" data-tabs="cmd-libutils" data-tab="rpm"><pre data-title="bash" data-channel="stable"><code>sudo dnf install libutils</code></pre><pre data-title="bash" data-channel="pre"><code>sudo dnf install libutils-pre</code></pre></div><div class="ctab-panel" data-tabs="cmd-libutils" data-tab="deb"><pre data-title="bash" data-channel="stable"><code>sudo apt install libutils</code></pre><pre data-title="bash" data-channel="pre"><code>sudo apt install libutils-pre</code></pre></div><div class="ctab-panel" data-tabs="cmd-libutils" data-tab="arch"><pre data-title="bash" data-channel="stable"><code>sudo pacman -S libutils</code></pre><pre data-title="bash" data-channel="pre"><code>sudo pacman -S libutils-pre</code></pre></div><div class="ctab-panel" data-tabs="cmd-libutils" data-tab="cli"><pre data-title="bash" data-channel="stable"><code>./universe install libutils</code></pre><pre data-title="bash" data-channel="pre"><code>./universe install libutils --pre</code></pre></div><div class="links"><a href="https://github.com/TsukiNi22/libutils"><span data-lang="en">Repository</span><span data-lang="fr">Dépôt</span></a><a href="https://tsukini22.github.io/libutils/docs/">Docs</a><a href="https://github.com/TsukiNi22/libutils/releases/tag/v4.2.0">Release v4.2.0</a><a href="https://tsukini22.github.io/libutils"><span data-lang="en">Package repository</span><span data-lang="fr">Dépôt de paquets</span></a></div><details class="more"><summary><span data-lang="en">28 packages</span><span data-lang="fr">28 paquets</span></summary><div><div class="table-wrap" role="region" tabindex="0" aria-label="Packages of libutils"><table><thead><tr><th scope="col"><span data-lang="en">Package</span><span data-lang="fr">Paquet</span></th><th scope="col">Version</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>libutils</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (global)</td></tr><tr><td><code>libutils-as</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (asan)</td></tr><tr><td><code>libutils-as-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (asan)</td></tr><tr><td><code>libutils-db</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (debug)</td></tr><tr><td><code>libutils-db-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (debug)</td></tr><tr><td><code>libutils-dev</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>libutils-dev-as</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>libutils-dev-as-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>libutils-dev-db</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>libutils-dev-db-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>libutils-dev-op</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>libutils-dev-op-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>libutils-dev-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>libutils-op</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (optimized)</td></tr><tr><td><code>libutils-op-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (optimized)</td></tr><tr><td><code>libutils-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (global)</td></tr><tr><td><code>mingw64-libutils</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (global)</td></tr><tr><td><code>mingw64-libutils-db</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (debug)</td></tr><tr><td><code>mingw64-libutils-db-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (debug)</td></tr><tr><td><code>mingw64-libutils-dev</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>mingw64-libutils-dev-db</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>mingw64-libutils-dev-db-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>mingw64-libutils-dev-op</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>mingw64-libutils-dev-op-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>mingw64-libutils-dev-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (headers/cmake)</td></tr><tr><td><code>mingw64-libutils-op</code></td><td><code>4.2.0-1</code></td><td>C++20 utility library (optimized)</td></tr><tr><td><code>mingw64-libutils-op-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (optimized)</td></tr><tr><td><code>mingw64-libutils-pre</code></td><td><code>4.3.1-47</code></td><td>C++20 utility library (global)</td></tr></tbody></table></div></div></details><div class="page-meta"><span><span data-lang="en">Updated</span><span data-lang="fr">Mis à jour</span> 2026-11-08</span></div></article><article class="pkg" id="pkg-brain" data-category="hand-made" data-formats="rpm deb arch" data-search="brain banana-brain libbrain hand-made rpm deb arch C++20 neural network library with several kinds of networks (banana included) Bibliothèque C++20 de réseaux de neurones avec plusieurs types de réseaux (banane incluse) libbrain libbrain-as libbrain-as-pre libbrain-db libbrain-db-pre libbrain-dev libbrain-dev-as libbrain-dev-as-pre libbrain-dev-db libbrain-dev-db-pre libbrain-dev-op libbrain-dev-op-pre libbrain-dev-pre libbrain-op libbrain-op-pre libbrain-pre mingw64-libbrain mingw64-libbrain-db mingw64-libbrain-db-pre mingw64-libbrain-dev mingw64-libbrain-dev-db mingw64-libbrain-dev-db-pre mingw64-libbrain-dev-op mingw64-libbrain-dev-op-pre mingw64-libbrain-dev-pre mingw64-libbrain-op mingw64-libbrain-op-pre mingw64-libbrain-pre"><div class="pkg-head"><h4><a href="#pkg-brain">brain</a></h4><span class="pill cat-hand-made">hand-made</span><span class="spacer"></span><span class="badge" data-channel="stable">1.0.0</span><span class="badge pre" data-channel="pre">1.2.0-5 pre</span></div><p class="sum"><span data-lang="en">C++20 neural network library with several kinds of networks (banana included)</span><span data-lang="fr">Bibliothèque C++20 de réseaux de neurones avec plusieurs types de réseaux (banane incluse)</span></p><div class="fmts"><span class="pill">rpm</span><span class="pill">deb</span><span class="pill">arch</span></div><div class="ctabs" data-tabs="cmd-brain" data-distro><button type="button" data-tab="rpm">Fedora</button><button type="button" data-tab="deb">Debian / Ubuntu</button><button type="button" data-tab="arch">Arch</button><button type="button" data-tab="cli">universe</button></div><div class="ctab-panel" data-tabs="cmd-brain" data-tab="rpm"><pre data-title="bash" data-channel="stable"><code>sudo dnf install libbrain</code></pre><pre data-title="bash" data-channel="pre"><code>sudo dnf install libbrain-pre</code></pre></div><div class="ctab-panel" data-tabs="cmd-brain" data-tab="deb"><pre data-title="bash" data-channel="stable"><code>sudo apt install libbrain</code></pre><pre data-title="bash" data-channel="pre"><code>sudo apt install libbrain-pre</code></pre></div><div class="ctab-panel" data-tabs="cmd-brain" data-tab="arch"><pre data-title="bash" data-channel="stable"><code>sudo pacman -S libbrain</code></pre><pre data-title="bash" data-channel="pre"><code>sudo pacman -S libbrain-pre</code></pre></div><div class="ctab-panel" data-tabs="cmd-brain" data-tab="cli"><pre data-title="bash" data-channel="stable"><code>./universe install brain</code></pre><pre data-title="bash" data-channel="pre"><code>./universe install brain --pre</code></pre></div><div class="links"><a href="https://github.com/TsukiNi22/banana-brain"><span data-lang="en">Repository</span><span data-lang="fr">Dépôt</span></a><a href="https://tsukini22.github.io/banana-brain/docs/">Docs</a><a href="https://github.com/TsukiNi22/banana-brain/releases/tag/old-v1.0.0">Release old-v1.0.0</a><a href="https://tsukini22.github.io/banana-brain"><span data-lang="en">Package repository</span><span data-lang="fr">Dépôt de paquets</span></a></div><details class="more"><summary><span data-lang="en">28 packages</span><span data-lang="fr">28 paquets</span></summary><div><div class="table-wrap" role="region" tabindex="0" aria-label="Packages of brain"><table><thead><tr><th scope="col"><span data-lang="en">Package</span><span data-lang="fr">Paquet</span></th><th scope="col">Version</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>libbrain</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (global)</td></tr><tr><td><code>libbrain-as</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (asan)</td></tr><tr><td><code>libbrain-as-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (asan)</td></tr><tr><td><code>libbrain-db</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (debug)</td></tr><tr><td><code>libbrain-db-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (debug)</td></tr><tr><td><code>libbrain-dev</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>libbrain-dev-as</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>libbrain-dev-as-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>libbrain-dev-db</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>libbrain-dev-db-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>libbrain-dev-op</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>libbrain-dev-op-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>libbrain-dev-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>libbrain-op</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (optimized)</td></tr><tr><td><code>libbrain-op-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (optimized)</td></tr><tr><td><code>libbrain-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (global)</td></tr><tr><td><code>mingw64-libbrain</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (global)</td></tr><tr><td><code>mingw64-libbrain-db</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (debug)</td></tr><tr><td><code>mingw64-libbrain-db-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (debug)</td></tr><tr><td><code>mingw64-libbrain-dev</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>mingw64-libbrain-dev-db</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>mingw64-libbrain-dev-db-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>mingw64-libbrain-dev-op</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>mingw64-libbrain-dev-op-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>mingw64-libbrain-dev-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (headers/cmake)</td></tr><tr><td><code>mingw64-libbrain-op</code></td><td><code>1.0.0-1</code></td><td>C++20 neural network library (optimized)</td></tr><tr><td><code>mingw64-libbrain-op-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (optimized)</td></tr><tr><td><code>mingw64-libbrain-pre</code></td><td><code>1.2.0-5</code></td><td>C++20 neural network library (global)</td></tr></tbody></table></div></div></details><div class="page-meta"><span><span data-lang="en">Updated</span><span data-lang="fr">Mis à jour</span> 2026-11-11</span></div></article><article class="pkg" id="pkg-context-forge" data-category="hand-made" data-formats="rpm deb" data-search="context-forge context-forge context-forge hand-made rpm deb Formatting of compiler output (stderr) with ollama and other means, for C++ compilers Mise en forme de la sortie des compilateurs (stderr) avec ollama et d&#x27;autres moyens, pour le C++ context-forge"><div class="pkg-head"><h4><a href="#pkg-context-forge">context-forge</a></h4><span class="pill cat-hand-made">hand-made</span><span class="spacer"></span><span class="badge">1.0.0</span></div><p class="sum"><span data-lang="en">Formatting of compiler output (stderr) with ollama and other means, for C++ compilers</span><span data-lang="fr">Mise en forme de la sortie des compilateurs (stderr) avec ollama et d&#x27;autres moyens, pour le C++</span></p><div class="fmts"><span class="pill">rpm</span><span class="pill">deb</span></div><div class="ctabs" data-tabs="cmd-context-forge" data-distro><button type="button" data-tab="rpm">Fedora</button><button type="button" data-tab="deb">Debian / Ubuntu</button><button type="button" data-tab="cli">universe</button></div><div class="ctab-panel" data-tabs="cmd-context-forge" data-tab="rpm"><pre data-title="bash"><code>sudo dnf install context-forge</code></pre></div><div class="ctab-panel" data-tabs="cmd-context-forge" data-tab="deb"><pre data-title="bash"><code>sudo apt install context-forge</code></pre></div><div class="ctab-panel" data-tabs="cmd-context-forge" data-tab="cli"><pre data-title="bash"><code>./universe install context-forge</code></pre></div><div class="links"><a href="https://github.com/TsukiNi22/context-forge"><span data-lang="en">Repository</span><span data-lang="fr">Dépôt</span></a><a href="https://tsukini22.github.io/context-forge/">Docs</a><a href="https://github.com/TsukiNi22/context-forge/releases/tag/v1.0.0">Release v1.0.0</a><a href="https://tsukini22.github.io/context-forge"><span data-lang="en">Package repository</span><span data-lang="fr">Dépôt de paquets</span></a></div><details class="more"><summary><span data-lang="en">1 packages</span><span data-lang="fr">1 paquets</span></summary><div><div class="table-wrap" role="region" tabindex="0" aria-label="Packages of context-forge"><table><thead><tr><th scope="col"><span data-lang="en">Package</span><span data-lang="fr">Paquet</span></th><th scope="col">Version</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>context-forge</code></td><td><code>1.0.0-1</code></td><td>C++20 wrapper to format command output</td></tr></tbody></table></div></div></details><div class="page-meta"><span><span data-lang="en">Updated</span><span data-lang="fr">Mis à jour</span> 2026-11-08</span></div></article></div></div><div class="cat-group" data-category="ai-made"><h3 id="ai-made"><span class="pill cat-ai-made">ai-made</span><span class="count">2</span></h3><div class="pkgs"><article class="pkg" id="pkg-xstyle" data-category="ai-made" data-formats="rpm deb arch" data-search="xstyle xstyle xstyle ai-made rpm deb arch Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules Vérificateur et correcteur de mon style de code : C++20 / libutils d&#x27;abord, puis Python, shell, Rust, CMake et règles génériques xstyle xstyle-as xstyle-as-pre xstyle-db xstyle-db-pre xstyle-op xstyle-op-pre xstyle-pre"><div class="pkg-head"><h4><a href="#pkg-xstyle">xstyle</a></h4><span class="pill cat-ai-made">ai-made</span><span class="spacer"></span><span class="badge" data-channel="stable">1.0.0</span><span class="badge pre" data-channel="pre">1.1.0-2 pre</span></div><p class="sum"><span data-lang="en">Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules</span><span data-lang="fr">Vérificateur et correcteur de mon style de code : C++20 / libutils d&#x27;abord, puis Python, shell, Rust, CMake et règles génériques</span></p><div class="fmts"><span class="pill">rpm</span><span class="pill">deb</span><span class="pill">arch</span></div><div class="ctabs" data-tabs="cmd-xstyle" data-distro><button type="button" data-tab="rpm">Fedora</button><button type="button" data-tab="deb">Debian / Ubuntu</button><button type="button" data-tab="arch">Arch</button><button type="button" data-tab="cli">universe</button></div><div class="ctab-panel" data-tabs="cmd-xstyle" data-tab="rpm"><pre data-title="bash" data-channel="stable"><code>sudo dnf install xstyle</code></pre><pre data-title="bash" data-channel="pre"><code>sudo dnf install xstyle-pre</code></pre></div><div class="ctab-panel" data-tabs="cmd-xstyle" data-tab="deb"><pre data-title="bash" data-channel="stable"><code>sudo apt install xstyle</code></pre><pre data-title="bash" data-channel="pre"><code>sudo apt install xstyle-pre</code></pre></div><div class="ctab-panel" data-tabs="cmd-xstyle" data-tab="arch"><pre data-title="bash" data-channel="stable"><code>sudo pacman -S xstyle</code></pre><pre data-title="bash" data-channel="pre"><code>sudo pacman -S xstyle-pre</code></pre></div><div class="ctab-panel" data-tabs="cmd-xstyle" data-tab="cli"><pre data-title="bash" data-channel="stable"><code>./universe install xstyle</code></pre><pre data-title="bash" data-channel="pre"><code>./universe install xstyle --pre</code></pre></div><div class="links"><a href="https://github.com/TsukiNi22/xstyle"><span data-lang="en">Repository</span><span data-lang="fr">Dépôt</span></a><a href="https://tsukini22.github.io/xstyle/docs/">Docs</a><a href="https://github.com/TsukiNi22/xstyle/releases/tag/v1.0.0">Release v1.0.0</a><a href="https://tsukini22.github.io/xstyle"><span data-lang="en">Package repository</span><span data-lang="fr">Dépôt de paquets</span></a></div><details class="more"><summary><span data-lang="en">8 packages</span><span data-lang="fr">8 paquets</span></summary><div><div class="table-wrap" role="region" tabindex="0" aria-label="Packages of xstyle"><table><thead><tr><th scope="col"><span data-lang="en">Package</span><span data-lang="fr">Paquet</span></th><th scope="col">Version</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>xstyle</code></td><td><code>1.0.0-1</code></td><td>Coding style checker / fixer (global)</td></tr><tr><td><code>xstyle-as</code></td><td><code>1.0.0-1</code></td><td>Coding style checker / fixer (asan)</td></tr><tr><td><code>xstyle-as-pre</code></td><td><code>1.1.0-2</code></td><td>Coding style checker / fixer (asan)</td></tr><tr><td><code>xstyle-db</code></td><td><code>1.0.0-1</code></td><td>Coding style checker / fixer (debug)</td></tr><tr><td><code>xstyle-db-pre</code></td><td><code>1.1.0-2</code></td><td>Coding style checker / fixer (debug)</td></tr><tr><td><code>xstyle-op</code></td><td><code>1.0.0-1</code></td><td>Coding style checker / fixer (optimized)</td></tr><tr><td><code>xstyle-op-pre</code></td><td><code>1.1.0-2</code></td><td>Coding style checker / fixer (optimized)</td></tr><tr><td><code>xstyle-pre</code></td><td><code>1.1.0-2</code></td><td>Coding style checker / fixer (global)</td></tr></tbody></table></div></div></details><div class="page-meta"><span><span data-lang="en">Updated</span><span data-lang="fr">Mis à jour</span> 2026-11-14</span></div></article><article class="pkg" id="pkg-xdesk" data-category="ai-made" data-formats="rpm deb arch" data-search="xdesk xdesk xdesk ai-made rpm deb arch Remote desktop and terminal in one binary (Windows / Unix), Qt6 or TTY, TLS 1.3 post-quantum Bureau et terminal à distance en un seul binaire (Windows / Unix), Qt6 ou TTY, TLS 1.3 post-quantique mingw64-xdesk mingw64-xdesk-db mingw64-xdesk-op xdesk xdesk-as xdesk-db xdesk-op"><div class="pkg-head"><h4><a href="#pkg-xdesk">xdesk</a></h4><span class="pill cat-ai-made">ai-made</span><span class="spacer"></span><span class="badge">1.0.0</span></div><p class="sum"><span data-lang="en">Remote desktop and terminal in one binary (Windows / Unix), Qt6 or TTY, TLS 1.3 post-quantum</span><span data-lang="fr">Bureau et terminal à distance en un seul binaire (Windows / Unix), Qt6 ou TTY, TLS 1.3 post-quantique</span></p><div class="fmts"><span class="pill">rpm</span><span class="pill">deb</span><span class="pill">arch</span></div><div class="ctabs" data-tabs="cmd-xdesk" data-distro><button type="button" data-tab="rpm">Fedora</button><button type="button" data-tab="deb">Debian / Ubuntu</button><button type="button" data-tab="arch">Arch</button><button type="button" data-tab="cli">universe</button></div><div class="ctab-panel" data-tabs="cmd-xdesk" data-tab="rpm"><pre data-title="bash"><code>sudo dnf install xdesk</code></pre></div><div class="ctab-panel" data-tabs="cmd-xdesk" data-tab="deb"><pre data-title="bash"><code>sudo apt install xdesk</code></pre></div><div class="ctab-panel" data-tabs="cmd-xdesk" data-tab="arch"><pre data-title="bash"><code>sudo pacman -S xdesk</code></pre></div><div class="ctab-panel" data-tabs="cmd-xdesk" data-tab="cli"><pre data-title="bash"><code>./universe install xdesk</code></pre></div><div class="links"><a href="https://github.com/TsukiNi22/xdesk"><span data-lang="en">Repository</span><span data-lang="fr">Dépôt</span></a><a href="https://tsukini22.github.io/xdesk/docs/">Docs</a><a href="https://github.com/TsukiNi22/xdesk/releases/tag/v1.0.0">Release v1.0.0</a><a href="https://tsukini22.github.io/xdesk"><span data-lang="en">Package repository</span><span data-lang="fr">Dépôt de paquets</span></a></div><details class="more"><summary><span data-lang="en">7 packages</span><span data-lang="fr">7 paquets</span></summary><div><div class="table-wrap" role="region" tabindex="0" aria-label="Packages of xdesk"><table><thead><tr><th scope="col"><span data-lang="en">Package</span><span data-lang="fr">Paquet</span></th><th scope="col">Version</th><th scope="col">Description</th></tr></thead><tbody><tr><td><code>mingw64-xdesk</code></td><td><code>1.0.0-1</code></td><td>Project xdesk (global)</td></tr><tr><td><code>mingw64-xdesk-db</code></td><td><code>1.0.0-1</code></td><td>Project xdesk (debug)</td></tr><tr><td><code>mingw64-xdesk-op</code></td><td><code>1.0.0-1</code></td><td>Project xdesk (optimized)</td></tr><tr><td><code>xdesk</code></td><td><code>1.0.0-1</code></td><td>Project xdesk (global)</td></tr><tr><td><code>xdesk-as</code></td><td><code>1.0.0-1</code></td><td>Project xdesk (asan)</td></tr><tr><td><code>xdesk-db</code></td><td><code>1.0.0-1</code></td><td>Project xdesk (debug)</td></tr><tr><td><code>xdesk-op</code></td><td><code>1.0.0-1</code></td><td>Project xdesk (optimized)</td></tr></tbody></table></div></div></details><div class="page-meta"><span><span data-lang="en">Updated</span><span data-lang="fr">Mis à jour</span> 2026-11-09</span></div></article></div></div>
+</section>
+
+<section id="files">
+  <h2><span data-lang="en">3. Repository files</span><span data-lang="fr">3. Fichiers du dépôt</span></h2>
+  <p><span data-lang="en">Everything is generated from the package repositories of each project: my-universe only points to them, nothing is copied.</span><span data-lang="fr">Tout est généré depuis les dépôts de paquets de chaque projet : my-universe ne fait que pointer vers eux, rien n'est copié.</span></p>
+  <div class="table-wrap" role="region" tabindex="0" aria-label="Files of the site"><table>
+    <thead><tr><th scope="col"><span data-lang="en">File</span><span data-lang="fr">Fichier</span></th><th scope="col"><span data-lang="en">Content</span><span data-lang="fr">Contenu</span></th></tr></thead>
+    <tbody>
+      <tr><td><a href="universe.repo"><code>universe.repo</code></a></td><td><span data-lang="en">Every rpm repository, for <code>/etc/yum.repos.d/</code></span><span data-lang="fr">Tous les dépôts rpm, pour <code>/etc/yum.repos.d/</code></span></td></tr>
+      <tr><td><a href="universe.list"><code>universe.list</code></a></td><td><span data-lang="en">Every deb repository, for <code>/etc/apt/sources.list.d/</code> (key in <code>/etc/apt/keyrings/universe.gpg</code>)</span><span data-lang="fr">Tous les dépôts deb, pour <code>/etc/apt/sources.list.d/</code> (clé dans <code>/etc/apt/keyrings/universe.gpg</code>)</span></td></tr>
+      <tr><td><a href="universe.conf"><code>universe.conf</code></a></td><td><span data-lang="en">Every pacman repository, to append to <code>/etc/pacman.conf</code></span><span data-lang="fr">Tous les dépôts pacman, à ajouter à <code>/etc/pacman.conf</code></span></td></tr>
+      <tr><td><a href="install.sh"><code>install.sh</code></a></td><td><span data-lang="en">The setup script above</span><span data-lang="fr">Le script d'installation ci-dessus</span></td></tr>
+      <tr><td><a href="index.json"><code>index.json</code></a></td><td><span data-lang="en">The whole catalog (versions, formats, sub-packages, links, dates)</span><span data-lang="fr">Tout le catalogue (versions, formats, sous-paquets, liens, dates)</span></td></tr>
+      <tr><td><a href="RPM-GPG-KEY-tsukini"><code>RPM-GPG-KEY-tsukini</code></a></td><td><span data-lang="en">Signing key of every package repository</span><span data-lang="fr">Clé de signature de tous les dépôts de paquets</span> (<code>69B8284D99B9A729C5BE935B067035C6A7DFA916</code>)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="badges">
+  <h2><span data-lang="en">4. Badges</span><span data-lang="fr">4. Badges</span></h2>
+  <p><span data-lang="en">Every badge is a <a href="https://shields.io/badges/endpoint-badge">shields.io endpoint</a> regenerated with the catalog: paste the Markdown in a README.</span><span data-lang="fr">Chaque badge est un <a href="https://shields.io/badges/endpoint-badge">endpoint shields.io</a> régénéré avec le catalogue : colle le Markdown dans un README.</span></p>
+  <div class="table-wrap" role="region" tabindex="0" aria-label="Badges"><table>
+    <thead><tr><th scope="col">Badge</th><th scope="col">Endpoint</th></tr></thead>
+    <tbody><tr><td><code>packages: 5</code></td><td><a href="badges/packages.json"><code>packages.json</code></a></td></tr><tr><td><code>last update: 2026-11-14</code></td><td><a href="badges/updated.json"><code>updated.json</code></a></td></tr><tr><td><code>checked: 2026-11-14</code></td><td><a href="badges/checked.json"><code>checked.json</code></a></td></tr><tr><td><code>hand-made: 3</code></td><td><a href="badges/hand-made.json"><code>hand-made.json</code></a></td></tr><tr><td><code>ai-made: 2</code></td><td><a href="badges/ai-made.json"><code>ai-made.json</code></a></td></tr><tr><td><code>libutils: 4.2.0</code></td><td><a href="badges/libutils.json"><code>libutils.json</code></a></td></tr><tr><td><code>libutils-pre: 4.3.1-47</code></td><td><a href="badges/libutils-pre.json"><code>libutils-pre.json</code></a></td></tr><tr><td><code>brain: 1.0.0</code></td><td><a href="badges/brain.json"><code>brain.json</code></a></td></tr><tr><td><code>brain-pre: 1.2.0-5</code></td><td><a href="badges/brain-pre.json"><code>brain-pre.json</code></a></td></tr><tr><td><code>context-forge: 1.0.0</code></td><td><a href="badges/context-forge.json"><code>context-forge.json</code></a></td></tr><tr><td><code>xstyle: 1.0.0</code></td><td><a href="badges/xstyle.json"><code>xstyle.json</code></a></td></tr><tr><td><code>xstyle-pre: 1.1.0-2</code></td><td><a href="badges/xstyle-pre.json"><code>xstyle-pre.json</code></a></td></tr><tr><td><code>xdesk: 1.0.0</code></td><td><a href="badges/xdesk.json"><code>xdesk.json</code></a></td></tr></tbody>
+  </table></div>
+  <pre data-title="Markdown"><code>![packages](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fpackages.json)
+![last update](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fupdated.json)
+![checked](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fchecked.json)
+![hand-made](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fhand-made.json)
+![ai-made](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fai-made.json)
+![libutils](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Flibutils.json)
+![libutils-pre](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Flibutils-pre.json)
+![brain](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fbrain.json)
+![brain-pre](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fbrain-pre.json)
+![context-forge](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fcontext-forge.json)
+![xstyle](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fxstyle.json)
+![xstyle-pre](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fxstyle-pre.json)
+![xdesk](https://img.shields.io/endpoint?url=https%3A%2F%2Ftsukini22.github.io%2Fmy-universe%2Fbadges%2Fxdesk.json)</code></pre>
+</section>
+</main>
+<script>window.DOCS_INDEX = {"entries": [{"k": "hand-made", "l": "en", "t": "libutils", "d": "C++20 library for many different tools: arguments, exceptions, network, IPC, cli, maths...", "u": "#pkg-libutils", "x": "libutils libutils hand-made rpm deb arch libutils libutils-as libutils-as-pre libutils-db libutils-db-pre libutils-dev libutils-dev-as libutils-dev-as-pre libutils-dev-db libutils-dev-db-pre libutils-dev-op libutils-dev-op-pre libutils-dev-pre libutils-op libutils-op-pre libutils-pre mingw64-libutils mingw64-libutils-db mingw64-libutils-db-pre mingw64-libutils-dev mingw64-libutils-dev-db mingw64-libutils-dev-db-pre mingw64-libutils-dev-op mingw64-libutils-dev-op-pre mingw64-libutils-dev-pre mingw64-libutils-op mingw64-libutils-op-pre mingw64-libutils-pre"}, {"k": "hand-made", "l": "fr", "t": "libutils", "d": "Bibliothèque C++20 pour plein d'outils : arguments, exceptions, réseau, IPC, cli, maths...", "u": "#pkg-libutils", "x": "libutils libutils hand-made rpm deb arch libutils libutils-as libutils-as-pre libutils-db libutils-db-pre libutils-dev libutils-dev-as libutils-dev-as-pre libutils-dev-db libutils-dev-db-pre libutils-dev-op libutils-dev-op-pre libutils-dev-pre libutils-op libutils-op-pre libutils-pre mingw64-libutils mingw64-libutils-db mingw64-libutils-db-pre mingw64-libutils-dev mingw64-libutils-dev-db mingw64-libutils-dev-db-pre mingw64-libutils-dev-op mingw64-libutils-dev-op-pre mingw64-libutils-dev-pre mingw64-libutils-op mingw64-libutils-op-pre mingw64-libutils-pre"}, {"k": "hand-made", "l": "en", "t": "brain", "d": "C++20 neural network library with several kinds of networks (banana included)", "u": "#pkg-brain", "x": "banana-brain libbrain hand-made rpm deb arch libbrain libbrain-as libbrain-as-pre libbrain-db libbrain-db-pre libbrain-dev libbrain-dev-as libbrain-dev-as-pre libbrain-dev-db libbrain-dev-db-pre libbrain-dev-op libbrain-dev-op-pre libbrain-dev-pre libbrain-op libbrain-op-pre libbrain-pre mingw64-libbrain mingw64-libbrain-db mingw64-libbrain-db-pre mingw64-libbrain-dev mingw64-libbrain-dev-db mingw64-libbrain-dev-db-pre mingw64-libbrain-dev-op mingw64-libbrain-dev-op-pre mingw64-libbrain-dev-pre mingw64-libbrain-op mingw64-libbrain-op-pre mingw64-libbrain-pre"}, {"k": "hand-made", "l": "fr", "t": "brain", "d": "Bibliothèque C++20 de réseaux de neurones avec plusieurs types de réseaux (banane incluse)", "u": "#pkg-brain", "x": "banana-brain libbrain hand-made rpm deb arch libbrain libbrain-as libbrain-as-pre libbrain-db libbrain-db-pre libbrain-dev libbrain-dev-as libbrain-dev-as-pre libbrain-dev-db libbrain-dev-db-pre libbrain-dev-op libbrain-dev-op-pre libbrain-dev-pre libbrain-op libbrain-op-pre libbrain-pre mingw64-libbrain mingw64-libbrain-db mingw64-libbrain-db-pre mingw64-libbrain-dev mingw64-libbrain-dev-db mingw64-libbrain-dev-db-pre mingw64-libbrain-dev-op mingw64-libbrain-dev-op-pre mingw64-libbrain-dev-pre mingw64-libbrain-op mingw64-libbrain-op-pre mingw64-libbrain-pre"}, {"k": "hand-made", "l": "en", "t": "context-forge", "d": "Formatting of compiler output (stderr) with ollama and other means, for C++ compilers", "u": "#pkg-context-forge", "x": "context-forge context-forge hand-made rpm deb context-forge"}, {"k": "hand-made", "l": "fr", "t": "context-forge", "d": "Mise en forme de la sortie des compilateurs (stderr) avec ollama et d'autres moyens, pour le C++", "u": "#pkg-context-forge", "x": "context-forge context-forge hand-made rpm deb context-forge"}, {"k": "ai-made", "l": "en", "t": "xstyle", "d": "Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules", "u": "#pkg-xstyle", "x": "xstyle xstyle ai-made rpm deb arch xstyle xstyle-as xstyle-as-pre xstyle-db xstyle-db-pre xstyle-op xstyle-op-pre xstyle-pre"}, {"k": "ai-made", "l": "fr", "t": "xstyle", "d": "Vérificateur et correcteur de mon style de code : C++20 / libutils d'abord, puis Python, shell, Rust, CMake et règles génériques", "u": "#pkg-xstyle", "x": "xstyle xstyle ai-made rpm deb arch xstyle xstyle-as xstyle-as-pre xstyle-db xstyle-db-pre xstyle-op xstyle-op-pre xstyle-pre"}, {"k": "ai-made", "l": "en", "t": "xdesk", "d": "Remote desktop and terminal in one binary (Windows / Unix), Qt6 or TTY, TLS 1.3 post-quantum", "u": "#pkg-xdesk", "x": "xdesk xdesk ai-made rpm deb arch mingw64-xdesk mingw64-xdesk-db mingw64-xdesk-op xdesk xdesk-as xdesk-db xdesk-op"}, {"k": "ai-made", "l": "fr", "t": "xdesk", "d": "Bureau et terminal à distance en un seul binaire (Windows / Unix), Qt6 ou TTY, TLS 1.3 post-quantique", "u": "#pkg-xdesk", "x": "xdesk xdesk ai-made rpm deb arch mingw64-xdesk mingw64-xdesk-db mingw64-xdesk-op xdesk xdesk-as xdesk-db xdesk-op"}, {"k": "page", "l": "en", "t": "Get everything", "d": "", "u": "#install", "x": "install.sh curl wget one line setup"}, {"k": "page", "l": "fr", "t": "Tout récupérer", "d": "", "u": "#install", "x": "install.sh curl wget one line setup"}, {"k": "page", "l": "en", "t": "By hand", "d": "", "u": "#manual", "x": "universe.repo universe.list universe.conf dnf apt pacman"}, {"k": "page", "l": "fr", "t": "À la main", "d": "", "u": "#manual", "x": "universe.repo universe.list universe.conf dnf apt pacman"}, {"k": "page", "l": "en", "t": "With the CLI", "d": "", "u": "#cli", "x": "universe setup install update info outdated list mirror links"}, {"k": "page", "l": "fr", "t": "Avec la CLI", "d": "", "u": "#cli", "x": "universe setup install update info outdated list mirror links"}, {"k": "page", "l": "en", "t": "Repository files", "d": "", "u": "#files", "x": "universe.repo universe.list universe.conf index.json key"}, {"k": "page", "l": "fr", "t": "Fichiers du dépôt", "d": "", "u": "#files", "x": "universe.repo universe.list universe.conf index.json key"}, {"k": "page", "l": "en", "t": "Badges", "d": "", "u": "#badges", "x": "shields.io endpoint markdown readme"}, {"k": "page", "l": "fr", "t": "Badges", "d": "", "u": "#badges", "x": "shields.io endpoint markdown readme"}]};</script>
+</div>
+<footer class="site">my-universe · <span data-lang="en">catalog checked</span><span data-lang="fr">catalogue vérifié le</span> 2026-11-14 04:00 UTC · <a href="https://github.com/TsukiNi22/my-universe">GitHub</a></footer>
+<script>
+window.DOC_FR = { "Toggle theme": "Changer de thème", "Contents": "Sommaire", "Language": "Langue", "Copy": "Copier", "Copied": "Copié", "Select & copy": "Sélectionner et copier", "Link to this section": "Lien vers cette section", "Open the navigation": "Ouvrir la navigation", "Guide": "Guide", "Technical": "Technique", "Graph": "Graphe", "Pages": "Pages", "Previous": "Précédent", "Next": "Suivant", "GitHub repository": "Dépôt GitHub", "Skip to the content": "Aller au contenu" };
+</script>
+<script>
+// Behaviour shared by the user's HTML pages (from html-doc): theme switch, optional EN / FR switch, copy buttons
+// on the code blocks, heading anchors, content tabs, mobile menu. Inlined in each page by scripts/new_page.py.
+
+// Language (only when the page has a .lang-switch): [data-i18n] elements and [data-i18n-<attr>] attributes are
+// translated with window.DOC_FR (English text -> French text), [data-lang] blocks are shown for their language only.
+(function () {
+  var root = document.documentElement;
+  var key = (root.getAttribute('data-storage-key') || 'page') + '-lang';
+  var FR = window.DOC_FR || {};
+  var listeners = [];
+  function tr(s) { return root.lang === 'fr' && Object.prototype.hasOwnProperty.call(FR, s) ? FR[s] : s; }
+  function apply() {
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      if (el.dataset.i18nEn === undefined) el.dataset.i18nEn = el.innerHTML.trim();
+      el.innerHTML = tr(el.dataset.i18nEn);
+    });
+    ['aria-label', 'title', 'placeholder'].forEach(function (attr) {
+      document.querySelectorAll('[data-i18n-' + attr + ']').forEach(function (el) {
+        var store = 'i18nEn' + attr.replace(/-(\w)/g, function (m, c) { return c.toUpperCase(); });
+        if (el.dataset[store] === undefined) el.dataset[store] = el.getAttribute(attr) || '';
+        el.setAttribute(attr, tr(el.dataset[store]));
+      });
+    });
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.setLang === root.lang);
+      b.setAttribute('aria-pressed', b.dataset.setLang === root.lang ? 'true' : 'false');
+    });
+  }
+  function set(lang) {
+    root.lang = lang === 'fr' ? 'fr' : 'en';
+    try { localStorage.setItem(key, root.lang); } catch (e) { /* storage unavailable */ }
+    apply();
+    listeners.forEach(function (f) { f(root.lang); });
+  }
+  var saved = null;
+  if (document.querySelector('.lang-switch')) {
+    try { saved = localStorage.getItem(key); } catch (e) { /* storage unavailable */ }
+  }
+  // Choice carried by a link of the site (?lang=): pages opened from file:// don't share their storage
+  var askedLang = new URLSearchParams(location.search).get('lang');
+  if (askedLang === 'en' || askedLang === 'fr') { saved = askedLang; try { localStorage.setItem(key, askedLang); } catch (e) { /* storage unavailable */ } }
+  root.lang = saved === 'fr' ? 'fr' : (root.lang || 'en');
+  window.docI18n = { tr: tr, set: set, apply: apply, onChange: function (f) { listeners.push(f); }, lang: function () { return root.lang; } };
+  document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+    b.addEventListener('click', function () { set(b.dataset.setLang); });
+  });
+  apply();
+})();
+
+// Links between the pages of the site carry the language, theme and level (?lang=fr&theme=dark&level=technical):
+// the choice applies to every page, also from file:// where each page has its own storage
+(function () {
+  var root = document.documentElement;
+  function carry(e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a || a.target === '_blank') return;
+    var href = a.getAttribute('href');
+    if (!/^[^:?#\/]+\.html(#.*)?$/.test(href) && !/^\.\/[^:?#\/]+\.html(#.*)?$/.test(href)) return; // pages of the same folder only
+    var u = new URL(a.href);
+    u.searchParams.set('lang', root.lang || 'en');
+    if (root.getAttribute('data-theme')) u.searchParams.set('theme', root.getAttribute('data-theme'));
+    if (root.getAttribute('data-level')) u.searchParams.set('level', root.getAttribute('data-level'));
+    a.href = u.href;
+  }
+  document.addEventListener('click', carry, true);
+  document.addEventListener('auxclick', carry, true);
+})();
+
+// Theme: sun / moon switch, choice saved, default = system preference
+(function () {
+  var root = document.documentElement;
+  var key = (root.getAttribute('data-storage-key') || 'page') + '-theme';
+  var btn = document.getElementById('themeToggle');
+  try { var saved = localStorage.getItem(key); if (saved) root.setAttribute('data-theme', saved); } catch (e) { /* storage unavailable */ }
+  var askedTheme = new URLSearchParams(location.search).get('theme'); // carried by a link of the site
+  if (askedTheme === 'dark' || askedTheme === 'light') { root.setAttribute('data-theme', askedTheme); try { localStorage.setItem(key, askedTheme); } catch (e) { /* storage unavailable */ } }
+  function isDark() {
+    return root.getAttribute('data-theme') === 'dark' ||
+      (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+  if (!btn) return;
+  btn.setAttribute('aria-checked', isDark() ? 'true' : 'false');
+  btn.addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    btn.setAttribute('aria-checked', next === 'dark' ? 'true' : 'false');
+    try { localStorage.setItem(key, next); } catch (e) { /* storage unavailable */ }
+    document.dispatchEvent(new CustomEvent('themechange', { detail: next }));
+  });
+})();
+
+// Figures: an SVG is never drawn larger than its viewBox (its text would grow with the screen)
+document.querySelectorAll('figure svg[viewBox]').forEach(function (svg) {
+  var w = +svg.getAttribute('viewBox').split(/[\s,]+/)[2];
+  if (w && !svg.style.maxWidth) { svg.style.maxWidth = w + 'px'; svg.style.marginInline = 'auto'; }
+});
+
+// A drawing on a small screen: never under 72 % of its size (labels of 13 px stay readable), it scrolls in a box of its own, its caption stays.
+// Pages drawing their figures themselves are left alone (explain-doc: data-page="explain", protocol-doc: a min-width of their own)
+if (document.documentElement.getAttribute('data-page') !== 'explain') document.querySelectorAll('figure > svg[viewBox]').forEach(function (svg) {
+  var width = +svg.getAttribute('viewBox').split(/[\s,]+/)[2];
+  if (!(width > 400) || svg.style.minWidth) return;
+  var box = document.createElement('div');
+  box.className = 'figure-scroll';
+  svg.parentNode.insertBefore(box, svg);
+  box.appendChild(svg);
+  svg.style.minWidth = Math.round(width * 0.72) + 'px';
+  function mark() { // a block that scrolls is reached and scrolled with the keyboard
+    if (box.scrollWidth > box.clientWidth + 1) {
+      box.setAttribute('tabindex', '0');
+      box.setAttribute('role', 'region');
+      box.setAttribute('aria-label', svg.getAttribute('aria-label') || 'Figure');
+    } else ['tabindex', 'role', 'aria-label'].forEach(function (name) { box.removeAttribute(name); });
+  }
+  mark();
+  if ('ResizeObserver' in window) new ResizeObserver(mark).observe(box);
+  else window.addEventListener('resize', mark);
+});
+
+// Diagram links: an arrow is computed from the shapes it joins instead of typed coordinates, so it always touches
+// them. <path class="edge" data-from="a" data-to="b" marker-end="url(#arr)"/>: a / b = id of a rect, circle, ellipse
+// (or a <g> holding one). Options: data-from="a:right" (side: top, bottom, left, right), data-bend="0.2" (curve, +/-
+// fraction of the length), data-gap="2" (space before the shape). A label <text data-label-for="pathId"
+// data-offset="-8"> is placed on the middle of the path. Geometry is read from the attributes (works while hidden).
+window.docDiagram = (function () {
+  function translateOf(el, svg) {
+    var x = 0, y = 0;
+    for (var n = el; n && n !== svg; n = n.parentNode) {
+      var t = n.getAttribute && n.getAttribute('transform');
+      var m = t && t.match(/translate\(\s*(-?[\d.]+)[\s,]*(-?[\d.]+)?\s*\)/);
+      if (m) { x += +m[1]; y += +(m[2] || 0); }
+    }
+    return [x, y];
+  }
+  function shape(svg, id) {
+    var el = svg.querySelector('[id="' + id + '"]');
+    if (el && el.tagName.toLowerCase() === 'g') el = el.querySelector('rect, circle, ellipse');
+    if (!el) return null;
+    var o = translateOf(el, svg), num = function (a) { return +(el.getAttribute(a) || 0); };
+    var tag = el.tagName.toLowerCase();
+    if (tag === 'rect') return { kind: 'rect', x: num('x') + o[0], y: num('y') + o[1], w: num('width'), h: num('height') };
+    if (tag === 'circle') return { kind: 'ellipse', cx: num('cx') + o[0], cy: num('cy') + o[1], rx: num('r'), ry: num('r') };
+    return { kind: 'ellipse', cx: num('cx') + o[0], cy: num('cy') + o[1], rx: num('rx'), ry: num('ry') };
+  }
+  function center(s) { return s.kind === 'rect' ? [s.x + s.w / 2, s.y + s.h / 2] : [s.cx, s.cy]; }
+  function side(s, name) {
+    var c = center(s), hw = s.kind === 'rect' ? s.w / 2 : s.rx, hh = s.kind === 'rect' ? s.h / 2 : s.ry;
+    return { top: [c[0], c[1] - hh], bottom: [c[0], c[1] + hh], left: [c[0] - hw, c[1]], right: [c[0] + hw, c[1]] }[name];
+  }
+  // Point of the border of s in the direction of p, moved back by gap
+  function border(s, p, gap) {
+    var c = center(s), dx = p[0] - c[0], dy = p[1] - c[1], len = Math.hypot(dx, dy) || 1, k;
+    if (s.kind === 'rect') k = Math.min(dx ? (s.w / 2) / Math.abs(dx) : Infinity, dy ? (s.h / 2) / Math.abs(dy) : Infinity);
+    else k = 1 / Math.sqrt((dx * dx) / (s.rx * s.rx) + (dy * dy) / (s.ry * s.ry));
+    return [c[0] + dx * k + dx / len * gap, c[1] + dy * k + dy / len * gap];
+  }
+  // Point of the border of s for an arrow coming from / going to toward; off spreads several arrows of the same
+  // shape along its side (instead of all reaching the same point)
+  function end(s, spec, toward, gap, off) {
+    var name = spec.split(':')[1], p;
+    if (name) p = side(s, name);
+    else if (off && s.kind === 'rect') {
+        var c = center(s), dx = toward[0] - c[0], dy = toward[1] - c[1];
+        if (Math.abs(dy) * s.w >= Math.abs(dx) * s.h) p = [c[0] + off * s.w, c[1] + (dy < 0 ? -1 : 1) * s.h / 2];
+        else p = [c[0] + (dx < 0 ? -1 : 1) * s.w / 2, c[1] + off * s.h];
+    } else p = border(s, toward, 0);
+    var vx = toward[0] - p[0], vy = toward[1] - p[1], len = Math.hypot(vx, vy) || 1;
+    return [p[0] + vx / len * gap, p[1] + vy / len * gap];
+  }
+  // Slot (-0.3 .. 0.3 of the side) of each arrow end sharing a shape, ordered by where the other end is
+  function slots(items) {
+    var groups = {};
+    items.forEach(function (it) { if (!it.spec.split(':')[1]) (groups[it.id] = groups[it.id] || []).push(it); });
+    Object.keys(groups).forEach(function (id) {
+      var g = groups[id], s = g[0].shape, c = center(s);
+      if (g.length < 2) return;
+      g.forEach(function (it) {
+        var dx = it.toward[0] - c[0], dy = it.toward[1] - c[1];
+        it.vertical = s.kind === 'rect' && Math.abs(dy) * s.w >= Math.abs(dx) * s.h;
+        it.key = it.vertical ? dx : dy;
+      });
+      [true, false].forEach(function (v) {
+        var sub = g.filter(function (it) { return it.vertical === v; }).sort(function (a, b) { return a.key - b.key; });
+        if (sub.length > 1) sub.forEach(function (it, i) { it.off = ((i + 1) / (sub.length + 1) - 0.5) * 0.6; });
+      });
+    });
+  }
+  function layout(svg) {
+    var items = [], links = [];
+    svg.querySelectorAll('[data-from][data-to]').forEach(function (path) {
+      var fa = path.dataset.from, ta = path.dataset.to;
+      var a = shape(svg, fa.split(':')[0]), b = shape(svg, ta.split(':')[0]);
+      if (!a || !b) { console.warn('diagram link: unknown shape', fa, ta); return; }
+      var gap = +(path.dataset.gap || 2), bend = +(path.dataset.bend || 0);
+      var ca = fa.indexOf(':') > 0 ? side(a, fa.split(':')[1]) : center(a);
+      var cb = ta.indexOf(':') > 0 ? side(b, ta.split(':')[1]) : center(b);
+      var mx = (ca[0] + cb[0]) / 2, my = (ca[1] + cb[1]) / 2, len = Math.hypot(cb[0] - ca[0], cb[1] - ca[1]) || 1;
+      var ctrl = [mx - (cb[1] - ca[1]) / len * bend * len, my + (cb[0] - ca[0]) / len * bend * len];
+      var ea = { spec: fa, id: fa.split(':')[0], shape: a, toward: bend ? ctrl : cb, off: 0 };
+      var eb = { spec: ta, id: ta.split(':')[0], shape: b, toward: bend ? ctrl : ca, off: 0 };
+      items.push(ea, eb);
+      links.push({ path: path, gap: gap, bend: bend, ctrl: ctrl, ea: ea, eb: eb });
+    });
+    slots(items);
+    links.forEach(function (l) {
+      var path = l.path, gap = l.gap, bend = l.bend, ctrl = l.ctrl;
+      var p1 = end(l.ea.shape, l.ea.spec, l.ea.toward, gap, l.ea.off), p2 = end(l.eb.shape, l.eb.spec, l.eb.toward, gap, l.eb.off);
+      var f = function (p) { return p[0].toFixed(1) + ' ' + p[1].toFixed(1); };
+      path.setAttribute('d', bend ? 'M' + f(p1) + ' Q' + f(ctrl) + ' ' + f(p2) : 'M' + f(p1) + ' L' + f(p2));
+      var mid = bend ? [(p1[0] + 2 * ctrl[0] + p2[0]) / 4, (p1[1] + 2 * ctrl[1] + p2[1]) / 4] : [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
+      if (path.id) svg.querySelectorAll('[data-label-for="' + path.id + '"]').forEach(function (t) {
+        var off = +(t.dataset.offset || -8), dx = p2[0] - p1[0], dy = p2[1] - p1[1], l = Math.hypot(dx, dy) || 1;
+        var nx = -dy / l, ny = dx / l;
+        if (ny > 0) { nx = -nx; ny = -ny; } // a negative offset is always above the path
+        t.setAttribute('x', (mid[0] - nx * off).toFixed(1));
+        t.setAttribute('y', (mid[1] - ny * off).toFixed(1));
+        if (!t.getAttribute('text-anchor')) t.setAttribute('text-anchor', 'middle');
+      });
+    });
+  }
+  document.querySelectorAll('svg').forEach(layout);
+  return { layout: layout };
+})();
+
+// Tables: each one in a box of its own (it scrolls there, never the page); a short cell stays on one line next to a long sentence
+// (never a word per line) as long as the table fits, a word too long for any column may break. Measured again when its box changes
+// (the width of the screen, a tab or a <details> opened) and with the language.
+window.docTables = (function () {
+  var LIMITS = [40, 28, 20, 14], WORD_KEPT = 32, CELLS_MAX = 3000;
+  var tables = [];
+  function crushed(item) { // a cell of three words or more, one word per line
+    if (item.size === Infinity) return false;
+    var words = (item.cell.innerText || '').trim().split(/\s+/).length;
+    if (words < 3 || item.cell.offsetWidth >= 150) return false; // wider: long names, one a line, nothing to pair them
+    var range = document.createRange(), lines = 0, last = -1e9;
+    range.selectNodeContents(item.cell);
+    Array.prototype.slice.call(range.getClientRects()).sort(function (a, b) { return a.top - b.top; }).forEach(function (rect) {
+      var middle = (rect.top + rect.bottom) / 2;
+      if (middle - last > Math.max(4, rect.height * 0.6)) { lines++; last = middle; }
+    });
+    return lines >= words || (lines >= 10 && words / lines < 3); // or a sentence squeezed: better a table that scrolls
+  }
+  function fit(table) {
+    var box = table.closest('.table-wrap');
+    if (!box || !box.clientWidth) return; // hidden: done when it is shown
+    var cells = table.querySelectorAll('th, td');
+    if (cells.length > CELLS_MAX) return;
+    var items = [];
+    cells.forEach(function (cell) {
+      var blocks = cell.querySelector('p, ul, ol, pre, table, div, dl, blockquote');
+      var text = (cell.innerText || '').trim();
+      var longest = text.split(/\s+/).reduce(function (most, word) { return Math.max(most, word.length); }, 0);
+      cell.style.overflowWrap = longest > WORD_KEPT ? 'anywhere' : '';
+      cell.style.minWidth = longest > WORD_KEPT ? '18ch' : ''; // broken where it must, not four letters a line
+      items.push({ cell: cell, size: blocks || text.indexOf('\n') >= 0 ? Infinity : text.length });
+    });
+    var keep = function (limit) { items.forEach(function (item) { item.cell.style.whiteSpace = item.size <= limit ? 'nowrap' : ''; }); };
+    var fits = false;
+    for (var at = 0; at < LIMITS.length && !fits; at++) {
+      keep(LIMITS[at]);
+      fits = table.offsetWidth <= box.clientWidth + 1 && !items.some(crushed); // three words on three lines is not fitting
+    }
+    if (!fits) { // it scrolls whatever is done: its short cells on one line, its sentences with some width
+      keep(LIMITS[1]);
+      items.forEach(function (item) { if (item.size > LIMITS[1]) item.cell.style.minWidth = '16em'; });
+    }
+    var scrolls = box.scrollWidth > box.clientWidth + 1;
+    if (scrolls && !box.hasAttribute('tabindex')) { // reached and scrolled with the keyboard
+      box.setAttribute('tabindex', '0');
+      box.setAttribute('role', 'region');
+      if (!box.getAttribute('aria-label')) box.setAttribute('aria-label', (table.caption && table.caption.textContent.trim()) || 'Table');
+    }
+  }
+  function fitAll() { tables.forEach(fit); }
+  function watch(table) {
+    if (table.closest('pre, svg, .no-fit')) return;
+    var box = table.closest('.table-wrap');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'table-wrap';
+      table.parentNode.insertBefore(box, table);
+      box.appendChild(table);
+    }
+    tables.push(table);
+    if ('ResizeObserver' in window) {
+      var width = -1;
+      new ResizeObserver(function () {
+        if (box.clientWidth === width) return;
+        width = box.clientWidth;
+        fit(table);
+      }).observe(box);
+    }
+  }
+  document.querySelectorAll('main table').forEach(watch);
+  fitAll();
+  if (!('ResizeObserver' in window)) window.addEventListener('resize', fitAll);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+  if (window.docI18n) window.docI18n.onChange(fitAll);
+  return { fit: fitAll, watch: function (table) { watch(table); fit(table); } };
+})();
+
+// Sidebar (mobile) + visible section, copy buttons, heading anchors, content tabs
+(function () {
+  var tr = function (s) { return window.docI18n ? window.docI18n.tr(s) : s; };
+  var menu = document.getElementById('menuBtn'), side = document.getElementById('sidebar');
+  if (menu && side) {
+    menu.addEventListener('click', function () { side.classList.toggle('open'); });
+    side.addEventListener('click', function (e) { if (e.target.closest('a')) side.classList.remove('open'); }); // a tapped entry closes the menu
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') side.classList.remove('open'); });
+    document.addEventListener('click', function (e) { if (!side.contains(e.target) && !menu.contains(e.target)) side.classList.remove('open'); });
+  }
+  var links = document.querySelectorAll('.sidebar a[href^="#"]');
+  if (links.length && 'IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id); });
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    document.querySelectorAll('main section[id]').forEach(function (s) { observer.observe(s); });
+  }
+  document.querySelectorAll('main pre').forEach(function (pre) {
+    if (pre.dataset.nocopy !== undefined) return;
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'copy'; b.textContent = tr('Copy');
+    b.addEventListener('click', function () {
+      var code = pre.querySelector('code') || pre;
+      var done = function () { b.textContent = tr('Copied'); setTimeout(function () { b.textContent = tr('Copy'); }, 1400); };
+      if (navigator.clipboard) navigator.clipboard.writeText(code.innerText).then(done, function () { b.textContent = tr('Select & copy'); });
+      else b.textContent = tr('Select & copy');
+    });
+    pre.appendChild(b);
+  });
+  document.querySelectorAll('main h2[id], main h3[id], main section[id] > h2').forEach(function (h) {
+    var id = h.id || h.parentElement.id;
+    if (!id || h.querySelector('.anchor')) return;
+    var a = document.createElement('a');
+    a.className = 'anchor'; a.href = '#' + id; a.textContent = '#';
+    a.setAttribute('aria-label', tr('Link to this section'));
+    h.appendChild(a);
+  });
+  document.querySelectorAll('.ctabs').forEach(function (bar) {
+    var group = bar.dataset.tabs;
+    var buttons = bar.querySelectorAll('button');
+    var panels = document.querySelectorAll('.ctab-panel[data-tabs="' + group + '"]');
+    function show(name) {
+      buttons.forEach(function (b) { b.classList.toggle('active', b.dataset.tab === name); });
+      panels.forEach(function (p) { p.classList.toggle('active', p.dataset.tab === name); });
+    }
+    buttons.forEach(function (b) { b.addEventListener('click', function () { show(b.dataset.tab); }); });
+    if (buttons.length) show(buttons[0].dataset.tab);
+  });
+  if (window.docI18n) window.docI18n.onChange(function () {
+    document.querySelectorAll('main pre .copy').forEach(function (b) { b.textContent = tr('Copy'); });
+    document.querySelectorAll('.anchor').forEach(function (a) { a.setAttribute('aria-label', tr('Link to this section')); });
+  });
+})();
+
+/* better-html-style - search (the site index, a server endpoint, or the sections of the page itself), its keys, the phone layout
+   of the search box, embed mode (?embed=1), ?theme= / ?lang= / ?q= in the address */
+(function () {
+  'use strict';
+  var Q = new URLSearchParams(location.search);
+  var EMBED = Q.get('embed') === '1';
+  var root = document.documentElement;
+  if (window.DOC_FR) { // the words of the site in the French table of base.js (the same object), applied again
+    var words = { 'Search': 'Rechercher', 'Home': 'Accueil', 'Edit this page': 'Modifier cette page', 'Updated': 'Mis à jour', 'pages': 'pages',
+      'Changelog': 'Historique', 'Full changelog': 'Historique complet', 'Sections': 'Sections', 'On this page': 'Sur cette page',
+      'Shortcut / for the search': 'Raccourci / pour la recherche' };
+    for (var w in words) if (!Object.prototype.hasOwnProperty.call(window.DOC_FR, w)) window.DOC_FR[w] = words[w];
+    if (window.docI18n && root.lang === 'fr') window.docI18n.apply();
+  }
+  if (EMBED) {
+    root.classList.add('embed');
+    var levels = document.querySelector('.topbar .level-switch'), pageHead = document.querySelector('main > header');
+    if (levels && pageHead) pageHead.appendChild(levels); // no top bar: the level switch of an explanation page stays reachable, in the header of the page
+    document.querySelectorAll('a[href]').forEach(function (a) {
+      var h = a.getAttribute('href');
+      if (h && !/^(#|https?:|mailto:|[\w.-]+\.(pdf|rpm|deb|apk|zip|gz|sh|json)(\?|#|$))/.test(h) && h.indexOf('embed=') < 0) a.setAttribute('href', h + (h.indexOf('?') < 0 ? '?' : '&') + 'embed=1');
+    });
+  }
+  if (Q.get('theme') === 'dark' || Q.get('theme') === 'light') root.setAttribute('data-theme', Q.get('theme'));
+  if (Q.get('lang') === 'fr' || Q.get('lang') === 'en') { try { window.docI18n.set(Q.get('lang')); } catch (e) { root.lang = Q.get('lang'); } }
+  var meta = document.querySelector('meta[name="docs-search"]');
+  var ENDPOINT = meta ? meta.content : '';
+  function lang() { return root.lang === 'fr' ? 'fr' : 'en'; }
+
+  // the index: the site's (search-index.js, deferred: read when searching), else the sections of this page, by language
+  var own = {};
+  function pageIndex() {
+    var l = lang();
+    if (own[l]) return own[l];
+    var out = [], title = document.querySelector('main h1');
+    function text(el) {
+      var c = el.cloneNode(true);
+      c.querySelectorAll('[data-lang]:not([data-lang="' + l + '"]), script, style, svg, .copy, .anchor').forEach(function (x) { x.remove(); });
+      c.querySelectorAll('th, td, li, p, div, pre, dt, dd, summary, caption, figcaption, h3, h4, h5, h6').forEach(function (x) { x.append(' '); }); // two cells or blocks never glued in a result
+      return c.textContent.replace(/\s+/g, ' ').trim();
+    }
+    document.querySelectorAll('main section[id]').forEach(function (s) {
+      var h = s.querySelector('h2'), body = text(s), head = h ? text(h) : s.id;
+      out.push({ k: 'page', t: (title ? text(title) + ' › ' : '') + head, d: body.slice(head.length, head.length + 110), u: '#' + s.id, x: body.slice(0, 600) });
+      s.querySelectorAll('h3[id]').forEach(function (h3) { out.push({ k: 'page', t: head + ' › ' + text(h3), d: '', u: '#' + h3.id, x: '' }); });
+    });
+    own[l] = out;
+    return out;
+  }
+  function index() { return (window.DOCS_INDEX && window.DOCS_INDEX.entries) || pageIndex(); }
+
+  // a query is words: each one must be found (prefix 3000 > start of a word 2600 > inside 2000 > a typo 900 / 800 > letters in order);
+  // the title counts fully, the description a little less, the body text least
+  function dist(a, b, max) {
+    if (Math.abs(a.length - b.length) > max) return max + 1;
+    var prev2 = null, prev = [], cur, i, j;
+    for (j = 0; j <= b.length; j++) prev[j] = j;
+    for (i = 1; i <= a.length; i++) {
+      cur = [i];
+      for (j = 1; j <= b.length; j++) {
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+        if (prev2 && i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) cur[j] = Math.min(cur[j], prev2[j - 2] + 1);
+      }
+      prev2 = prev; prev = cur;
+    }
+    return prev[b.length];
+  }
+  // typo tolerance: a missing, doubled, wrong or swapped letter still finds it (a swap counts as one)
+  function typo(q, s) {
+    if (q.length < 4) return -1;
+    var max = q.length >= 8 ? 2 : 1, words = s.split(/[^a-z0-9à-ÿ]+/), best = max + 1;
+    for (var k = 0; k < words.length; k++) {
+      var w = words[k];
+      if (w.length < 3) continue;
+      var d = Math.min(dist(q, w, max), dist(q, w.slice(0, q.length + 1), max) + 1);
+      if (d < best) best = d;
+    }
+    return best <= max ? 900 - best * 100 : -1;
+  }
+  function wscore(w, s) {
+    s = (s || '').toLowerCase();
+    var i = s.indexOf(w);
+    if (i === 0) return 3000 - s.length / 10;
+    if (i > 0) return (/[^a-z0-9à-ÿ]/.test(s[i - 1]) ? 2600 : 2000) - i / 10;
+    var t = typo(w, s);
+    if (t >= 0) return t;
+    if (w.length >= 4) { // letters in order, tight (sesend -> session_send)
+      var p = 0, first = -1, last = 0;
+      for (var j = 0; j < s.length && p < w.length; j++) if (s[j] === w[p]) { if (first < 0) first = j; last = j; p++; }
+      if (p === w.length && last - first <= w.length * 2) return 600 - (last - first);
+    }
+    return -1;
+  }
+  function entryScore(words, e) {
+    var total = 0;
+    if ((e.t || '').toLowerCase().replace(/\s+/g, ' ').trim() === words.join(' ')) return 1e6; // its whole title: that page first, not a section of it
+    for (var n = 0; n < words.length; n++) {
+      var w = words[n], best = Math.max(wscore(w, e.t), wscore(w, e.d) - 400, wscore(w, e.x) - 800);
+      if (best < 0) return -1;
+      total += best;
+    }
+    return total / words.length;
+  }
+  function queryWords(q) { return q.toLowerCase().split(/\s+/).filter(Boolean); }
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function mark(q, s) { // one pass on the raw text: a word of the query never matches inside a <mark> or an &amp; written before it
+    var words = queryWords(q).map(function (w) { return w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).sort(function (a, b) { return b.length - a.length; });
+    if (!words.length) return esc(s);
+    return String(s).split(new RegExp('(' + words.join('|') + ')', 'ig')).map(function (part, n) { return n % 2 ? '<mark>' + esc(part) + '</mark>' : esc(part); }).join('');
+  }
+  function localSearch(q) {
+    var l = lang(), words = queryWords(q);
+    return index().filter(function (e) { return !e.l || e.l === l; }).map(function (e) {
+      return { e: e, s: entryScore(words, e) };
+    }).filter(function (x) { return x.s >= 0; }).sort(function (a, b) { return b.s - a.s; }).slice(0, 8).map(function (x) { return x.e; });
+  }
+  function remoteSearch(q, done) {
+    fetch(ENDPOINT + '?q=' + encodeURIComponent(q) + '&lang=' + lang()).then(function (r) { return r.json(); })
+      .then(function (j) { done(j.results || []); }, function () { done(localSearch(q)); });
+  }
+  window.docsSearch = function (q, done) { if (ENDPOINT) remoteSearch(q, done); else done(localSearch(q)); };
+
+  function bind(input) {
+    var box = input.parentNode, ul = box.querySelector('.results'), sel = 0, cur = [], seq = 0;
+    function show(q, list) {
+      cur = list; sel = 0;
+      ul.innerHTML = cur.length ? cur.map(function (e, n) {
+        var u = e.u;
+        if (EMBED && u.charAt(0) !== '#') u = u.indexOf('#') >= 0 ? u.replace('#', (u.indexOf('?') < 0 ? '?' : '&') + 'embed=1#') : u + (u.indexOf('?') < 0 ? '?' : '&') + 'embed=1';
+        return '<li class="' + (n ? '' : 'sel') + '"><a href="' + esc(u) + '"><span class="t">' + mark(q, e.t) + '<span class="d">' + esc(e.d || '') + '</span></span>' + (e.k ? '<span class="kind ' + esc(e.k) + '">' + esc(e.k) + '</span>' : '') + '</a></li>';
+      }).join('') : '<li class="none">' + (lang() === 'fr' ? 'Aucun résultat' : 'No result') + '</li>';
+      ul.hidden = false;
+    }
+    function render() {
+      var q = input.value.trim(), n = ++seq;
+      if (!q) { ul.hidden = true; return; }
+      window.docsSearch(q, function (list) { if (n === seq) show(q, list); });
+    }
+    function move(d) {
+      var li = ul.querySelectorAll('li'); if (!cur.length) return;
+      li[sel].classList.remove('sel'); sel = (sel + d + cur.length) % cur.length; li[sel].classList.add('sel');
+      li[sel].scrollIntoView({ block: 'nearest' });
+    }
+    input.addEventListener('input', render);
+    input.addEventListener('focus', render);
+    input.addEventListener('keydown', function (ev) {
+      if (ev.key === 'ArrowDown') { ev.preventDefault(); move(1); }
+      else if (ev.key === 'ArrowUp') { ev.preventDefault(); move(-1); }
+      else if (ev.key === 'Enter' && cur[sel]) { ev.preventDefault(); ul.querySelectorAll('a')[sel].click(); ul.hidden = true; }
+      else if (ev.key === 'Escape') { ul.hidden = true; input.blur(); }
+    });
+    ul.addEventListener('click', function (ev) { if (ev.target.closest('a')) ul.hidden = true; });
+    document.addEventListener('click', function (ev) { if (!box.contains(ev.target)) ul.hidden = true; });
+  }
+  document.querySelectorAll('.sbox input').forEach(bind);
+  if (Q.get('q')) window.addEventListener('load', function () { var qi = document.querySelector('.sbox input'); if (qi) { qi.value = Q.get('q'); qi.dispatchEvent(new Event('input')); } }); // ?q=text opens the results
+
+  var menuBtn = document.querySelector('#menuBtn');
+  if (menuBtn && !document.querySelector('#sidebar')) menuBtn.style.display = 'none'; // a page without sidebar: nothing for the menu to open
+  (function () { // phone: the small search moves under the top bar (sticky), else it lives in the top bar
+    var sb = document.querySelector('.topbar .sbox.small'), bar = document.querySelector('.topbar'); if (!sb || !bar) return;
+    // a bar that also holds a level switch (explanation pages) has no room for it sooner
+    var home = sb.parentNode, mq = window.matchMedia(bar.querySelector('.level-switch') ? '(max-width: 640px)' : '(max-width: 480px)');
+    function place() {
+      if (mq.matches) { sb.classList.add('mob'); bar.after(sb); }
+      else { sb.classList.remove('mob'); home.insertBefore(sb, home.firstChild); }
+    }
+    place(); mq.addEventListener('change', place);
+  })();
+  // RGAA 12.10: "/" is a one-character shortcut, so the reader can turn it off (the choice is kept); Ctrl+K is a combination and stays
+  var skey = (root.getAttribute('data-storage-key') || 'page') + '-shortcut';
+  function slash() { try { return localStorage.getItem(skey) !== 'off'; } catch (e) { return true; } }
+  (function () {
+    var foot = document.querySelector('footer.site'); if (!foot || !document.querySelector('.sbox input') || EMBED) return;
+    var lab = document.createElement('label'), box = document.createElement('input'), txt = document.createElement('span');
+    lab.className = 'keys-toggle'; box.type = 'checkbox'; box.checked = slash(); txt.setAttribute('data-i18n', ''); txt.textContent = 'Shortcut / for the search';
+    lab.appendChild(box); lab.appendChild(txt); foot.appendChild(lab);
+    function hints() { document.querySelectorAll('.sbox kbd.hint').forEach(function (k) { k.hidden = !box.checked; }); }
+    box.addEventListener('change', function () { try { localStorage.setItem(skey, box.checked ? 'on' : 'off'); } catch (e) { /* storage unavailable */ } hints(); });
+    hints();
+    if (window.docI18n && root.lang === 'fr') window.docI18n.apply();
+  })();
+  document.addEventListener('keydown', function (ev) { // / (unless turned off) or Ctrl+K: the search
+    if (((ev.key === '/' && slash()) || ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'k')) && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.activeElement.isContentEditable) {
+      var big = document.querySelector('.hero .sbox input'), i = big && big.offsetParent ? big : document.querySelector('.sbox.small input') || big; // the big one when it is shown
+      if (i) { ev.preventDefault(); i.focus(); i.select(); }
+    }
+  });
+  function ph() { var fr = lang() === 'fr'; document.querySelectorAll('input[data-ph-fr]').forEach(function (i) { if (!i.dataset.ph) i.dataset.ph = i.placeholder; i.placeholder = fr ? i.dataset.phFr : i.dataset.ph; }); own = {}; }
+  ph(); new MutationObserver(ph).observe(root, { attributes: true, attributeFilter: ['lang'] });
+  // a host page (an app panel showing the docs in a frame) can switch the language / theme of an embedded copy
+  window.addEventListener('message', function (ev) {
+    var d = ev.data || {};
+    if (d.docsLang && window.docI18n) window.docI18n.set(d.docsLang);
+    if (d.docsTheme) root.setAttribute('data-theme', d.docsTheme);
+  });
+})();
+/* my-universe - catalog: filters (category, format, text), stable / pre channel, the same distribution in every card */
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var key = (root.getAttribute('data-storage-key') || 'my-universe') + '-';
+  var Q = new URLSearchParams(location.search);
+  function load(name) { try { return localStorage.getItem(key + name); } catch (e) { return null; } }
+  function save(name, value) { try { localStorage.setItem(key + name, value); } catch (e) { /* storage unavailable */ } }
+  if (window.DOC_FR) {
+    var words = { 'Search a package': 'Rechercher un paquet', 'Filter the packages': 'Filtrer les paquets', 'Category': 'Catégorie', 'Channel': 'Canal' };
+    for (var w in words) if (!Object.prototype.hasOwnProperty.call(window.DOC_FR, w)) window.DOC_FR[w] = words[w];
+  }
+
+  // Filters
+  var state = { category: 'all', format: 'all', text: '' };
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.pkg'));
+  var groups = Array.prototype.slice.call(document.querySelectorAll('.cat-group'));
+  var empty = document.querySelector('.empty-filter');
+  function apply() {
+    var shown = 0, words = state.text.toLowerCase().split(/\s+/).filter(Boolean);
+    cards.forEach(function (c) {
+      var text = (c.getAttribute('data-search') || '').toLowerCase();
+      var ok = (state.category === 'all' || c.getAttribute('data-category') === state.category) &&
+        (state.format === 'all' || (' ' + c.getAttribute('data-formats') + ' ').indexOf(' ' + state.format + ' ') >= 0) &&
+        words.every(function (x) { return text.indexOf(x) >= 0; });
+      c.hidden = !ok;
+      if (ok) shown++;
+    });
+    groups.forEach(function (g) {
+      var filtered = state.category !== 'all' || state.format !== 'all' || words.length;
+      g.hidden = (state.category !== 'all' && g.getAttribute('data-category') !== state.category) ||
+        (filtered && !g.querySelector('.pkg:not([hidden])'));
+    });
+    if (empty) empty.hidden = shown > 0;
+  }
+  function setChannel(value) {
+    root.setAttribute('data-channel-view', value === 'pre' ? 'pre' : 'stable');
+    save('channel', root.getAttribute('data-channel-view'));
+  }
+  document.querySelectorAll('.seg[data-filter]').forEach(function (seg) {
+    var name = seg.getAttribute('data-filter');
+    function select(value) {
+      seg.querySelectorAll('button').forEach(function (b) {
+        var on = b.getAttribute('data-value') === value;
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      if (name === 'channel') setChannel(value);
+      else { state[name] = value; apply(); }
+    }
+    seg.addEventListener('click', function (ev) {
+      var b = ev.target.closest('button');
+      if (b) select(b.getAttribute('data-value'));
+    });
+    if (name === 'channel') select(Q.get('channel') || load('channel') || 'stable');
+    else if (Q.get(name)) select(Q.get(name));
+  });
+  var filter = document.querySelector('.pkg-filter');
+  if (filter) filter.addEventListener('input', function () { state.text = filter.value.trim(); apply(); });
+
+  // The distribution chosen in one card is shown in every card (and kept)
+  var syncing = false;
+  function showDistro(tab) {
+    syncing = true;
+    document.querySelectorAll('.ctabs[data-distro] button[data-tab="' + tab + '"]').forEach(function (b) { b.click(); });
+    syncing = false;
+  }
+  document.querySelectorAll('.ctabs[data-distro]').forEach(function (bar) {
+    bar.addEventListener('click', function (ev) {
+      var b = ev.target.closest('button');
+      if (!b || syncing) return;
+      save('distro', b.getAttribute('data-tab'));
+      showDistro(b.getAttribute('data-tab'));
+    });
+  });
+  if (load('distro')) showDistro(load('distro'));
+  apply();
+})();
+
+</script>
+</body>
+</html>

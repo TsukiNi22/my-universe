@@ -1,0 +1,589 @@
+{
+  "owner": "TsukiNi22",
+  "pages": "https://tsukini22.github.io",
+  "site": "https://tsukini22.github.io/my-universe",
+  "key": "RPM-GPG-KEY-tsukini",
+  "updated": "2026-11-14",
+  "sources": [
+    {
+      "name": "libutils",
+      "repo": "libutils",
+      "category": "hand-made",
+      "private": false,
+      "main": "libutils",
+      "summary": {
+        "en": "C++20 library for many different tools: arguments, exceptions, network, IPC, cli, maths...",
+        "fr": "Bibliothèque C++20 pour plein d'outils : arguments, exceptions, réseau, IPC, cli, maths..."
+      },
+      "repository": "https://github.com/TsukiNi22/libutils",
+      "pages": "https://tsukini22.github.io/libutils",
+      "docs": "https://tsukini22.github.io/libutils/docs/",
+      "formats": {
+        "rpm": {
+          "releases": [
+            "44"
+          ],
+          "arches": [
+            "x86_64"
+          ]
+        },
+        "deb": {
+          "arches": [
+            "amd64"
+          ]
+        },
+        "arch": {
+          "db": "libutils",
+          "arches": [
+            "x86_64"
+          ]
+        }
+      },
+      "version": "4.2.0-1",
+      "pre": "4.3.1-47",
+      "release": {
+        "tag": "v4.2.0",
+        "date": "2026-10-17",
+        "url": "https://github.com/TsukiNi22/libutils/releases/tag/v4.2.0"
+      },
+      "packages": [
+        {
+          "name": "libutils",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (global)"
+        },
+        {
+          "name": "libutils-as",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (asan)"
+        },
+        {
+          "name": "libutils-as-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (asan)"
+        },
+        {
+          "name": "libutils-db",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (debug)"
+        },
+        {
+          "name": "libutils-db-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (debug)"
+        },
+        {
+          "name": "libutils-dev",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "libutils-dev-as",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "libutils-dev-as-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "libutils-dev-db",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "libutils-dev-db-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "libutils-dev-op",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "libutils-dev-op-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "libutils-dev-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "libutils-op",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (optimized)"
+        },
+        {
+          "name": "libutils-op-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (optimized)"
+        },
+        {
+          "name": "libutils-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (global)"
+        },
+        {
+          "name": "mingw64-libutils",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (global)"
+        },
+        {
+          "name": "mingw64-libutils-db",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (debug)"
+        },
+        {
+          "name": "mingw64-libutils-db-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (debug)"
+        },
+        {
+          "name": "mingw64-libutils-dev",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libutils-dev-db",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libutils-dev-db-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libutils-dev-op",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libutils-dev-op-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libutils-dev-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libutils-op",
+          "version": "4.2.0-1",
+          "description": "C++20 utility library (optimized)"
+        },
+        {
+          "name": "mingw64-libutils-op-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (optimized)"
+        },
+        {
+          "name": "mingw64-libutils-pre",
+          "version": "4.3.1-47",
+          "description": "C++20 utility library (global)"
+        }
+      ],
+      "updated": "2026-11-08"
+    },
+    {
+      "name": "brain",
+      "repo": "banana-brain",
+      "category": "hand-made",
+      "private": false,
+      "main": "libbrain",
+      "summary": {
+        "en": "C++20 neural network library with several kinds of networks (banana included)",
+        "fr": "Bibliothèque C++20 de réseaux de neurones avec plusieurs types de réseaux (banane incluse)"
+      },
+      "repository": "https://github.com/TsukiNi22/banana-brain",
+      "pages": "https://tsukini22.github.io/banana-brain",
+      "docs": "https://tsukini22.github.io/banana-brain/docs/",
+      "formats": {
+        "rpm": {
+          "releases": [
+            "44"
+          ],
+          "arches": [
+            "x86_64"
+          ]
+        },
+        "deb": {
+          "arches": [
+            "amd64"
+          ]
+        },
+        "arch": {
+          "db": "brain",
+          "arches": [
+            "x86_64"
+          ]
+        }
+      },
+      "version": "1.0.0-1",
+      "pre": "1.2.0-5",
+      "release": {
+        "tag": "old-v1.0.0",
+        "date": "2026-10-30",
+        "url": "https://github.com/TsukiNi22/banana-brain/releases/tag/old-v1.0.0"
+      },
+      "packages": [
+        {
+          "name": "libbrain",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (global)"
+        },
+        {
+          "name": "libbrain-as",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (asan)"
+        },
+        {
+          "name": "libbrain-as-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (asan)"
+        },
+        {
+          "name": "libbrain-db",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (debug)"
+        },
+        {
+          "name": "libbrain-db-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (debug)"
+        },
+        {
+          "name": "libbrain-dev",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "libbrain-dev-as",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "libbrain-dev-as-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "libbrain-dev-db",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "libbrain-dev-db-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "libbrain-dev-op",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "libbrain-dev-op-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "libbrain-dev-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "libbrain-op",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (optimized)"
+        },
+        {
+          "name": "libbrain-op-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (optimized)"
+        },
+        {
+          "name": "libbrain-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (global)"
+        },
+        {
+          "name": "mingw64-libbrain",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (global)"
+        },
+        {
+          "name": "mingw64-libbrain-db",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (debug)"
+        },
+        {
+          "name": "mingw64-libbrain-db-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (debug)"
+        },
+        {
+          "name": "mingw64-libbrain-dev",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libbrain-dev-db",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libbrain-dev-db-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libbrain-dev-op",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libbrain-dev-op-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libbrain-dev-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (headers/cmake)"
+        },
+        {
+          "name": "mingw64-libbrain-op",
+          "version": "1.0.0-1",
+          "description": "C++20 neural network library (optimized)"
+        },
+        {
+          "name": "mingw64-libbrain-op-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (optimized)"
+        },
+        {
+          "name": "mingw64-libbrain-pre",
+          "version": "1.2.0-5",
+          "description": "C++20 neural network library (global)"
+        }
+      ],
+      "updated": "2026-11-11"
+    },
+    {
+      "name": "context-forge",
+      "repo": "context-forge",
+      "category": "hand-made",
+      "private": false,
+      "main": "context-forge",
+      "summary": {
+        "en": "Formatting of compiler output (stderr) with ollama and other means, for C++ compilers",
+        "fr": "Mise en forme de la sortie des compilateurs (stderr) avec ollama et d'autres moyens, pour le C++"
+      },
+      "repository": "https://github.com/TsukiNi22/context-forge",
+      "pages": "https://tsukini22.github.io/context-forge",
+      "docs": "https://tsukini22.github.io/context-forge/",
+      "formats": {
+        "rpm": {
+          "releases": [
+            "44"
+          ],
+          "arches": [
+            "x86_64"
+          ]
+        },
+        "deb": {
+          "arches": [
+            "amd64"
+          ]
+        }
+      },
+      "version": "1.0.0-1",
+      "pre": "",
+      "release": {
+        "tag": "v1.0.0",
+        "date": "2026-09-23",
+        "url": "https://github.com/TsukiNi22/context-forge/releases/tag/v1.0.0"
+      },
+      "packages": [
+        {
+          "name": "context-forge",
+          "version": "1.0.0-1",
+          "description": "C++20 wrapper to format command output"
+        }
+      ],
+      "updated": "2026-11-08"
+    },
+    {
+      "name": "xstyle",
+      "repo": "xstyle",
+      "category": "ai-made",
+      "private": false,
+      "main": "xstyle",
+      "summary": {
+        "en": "Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules",
+        "fr": "Vérificateur et correcteur de mon style de code : C++20 / libutils d'abord, puis Python, shell, Rust, CMake et règles génériques"
+      },
+      "repository": "https://github.com/TsukiNi22/xstyle",
+      "pages": "https://tsukini22.github.io/xstyle",
+      "docs": "https://tsukini22.github.io/xstyle/docs/",
+      "formats": {
+        "rpm": {
+          "releases": [
+            "44"
+          ],
+          "arches": [
+            "x86_64"
+          ]
+        },
+        "deb": {
+          "arches": [
+            "amd64"
+          ]
+        },
+        "arch": {
+          "db": "xstyle",
+          "arches": [
+            "x86_64"
+          ]
+        }
+      },
+      "version": "1.0.0-1",
+      "pre": "1.1.0-2",
+      "release": {
+        "tag": "v1.0.0",
+        "date": "2026-11-09",
+        "url": "https://github.com/TsukiNi22/xstyle/releases/tag/v1.0.0"
+      },
+      "packages": [
+        {
+          "name": "xstyle",
+          "version": "1.0.0-1",
+          "description": "Coding style checker / fixer (global)"
+        },
+        {
+          "name": "xstyle-as",
+          "version": "1.0.0-1",
+          "description": "Coding style checker / fixer (asan)"
+        },
+        {
+          "name": "xstyle-as-pre",
+          "version": "1.1.0-2",
+          "description": "Coding style checker / fixer (asan)"
+        },
+        {
+          "name": "xstyle-db",
+          "version": "1.0.0-1",
+          "description": "Coding style checker / fixer (debug)"
+        },
+        {
+          "name": "xstyle-db-pre",
+          "version": "1.1.0-2",
+          "description": "Coding style checker / fixer (debug)"
+        },
+        {
+          "name": "xstyle-op",
+          "version": "1.0.0-1",
+          "description": "Coding style checker / fixer (optimized)"
+        },
+        {
+          "name": "xstyle-op-pre",
+          "version": "1.1.0-2",
+          "description": "Coding style checker / fixer (optimized)"
+        },
+        {
+          "name": "xstyle-pre",
+          "version": "1.1.0-2",
+          "description": "Coding style checker / fixer (global)"
+        }
+      ],
+      "updated": "2026-11-14"
+    },
+    {
+      "name": "xdesk",
+      "repo": "xdesk",
+      "category": "ai-made",
+      "private": false,
+      "main": "xdesk",
+      "summary": {
+        "en": "Remote desktop and terminal in one binary (Windows / Unix), Qt6 or TTY, TLS 1.3 post-quantum",
+        "fr": "Bureau et terminal à distance en un seul binaire (Windows / Unix), Qt6 ou TTY, TLS 1.3 post-quantique"
+      },
+      "repository": "https://github.com/TsukiNi22/xdesk",
+      "pages": "https://tsukini22.github.io/xdesk",
+      "docs": "https://tsukini22.github.io/xdesk/docs/",
+      "formats": {
+        "rpm": {
+          "releases": [
+            "44"
+          ],
+          "arches": [
+            "x86_64"
+          ]
+        },
+        "deb": {
+          "arches": [
+            "amd64"
+          ]
+        },
+        "arch": {
+          "db": "xdesk",
+          "arches": [
+            "x86_64"
+          ]
+        }
+      },
+      "version": "1.0.0-1",
+      "pre": "",
+      "release": {
+        "tag": "v1.0.0",
+        "date": "2026-11-09",
+        "url": "https://github.com/TsukiNi22/xdesk/releases/tag/v1.0.0"
+      },
+      "packages": [
+        {
+          "name": "mingw64-xdesk",
+          "version": "1.0.0-1",
+          "description": "Project xdesk (global)"
+        },
+        {
+          "name": "mingw64-xdesk-db",
+          "version": "1.0.0-1",
+          "description": "Project xdesk (debug)"
+        },
+        {
+          "name": "mingw64-xdesk-op",
+          "version": "1.0.0-1",
+          "description": "Project xdesk (optimized)"
+        },
+        {
+          "name": "xdesk",
+          "version": "1.0.0-1",
+          "description": "Project xdesk (global)"
+        },
+        {
+          "name": "xdesk-as",
+          "version": "1.0.0-1",
+          "description": "Project xdesk (asan)"
+        },
+        {
+          "name": "xdesk-db",
+          "version": "1.0.0-1",
+          "description": "Project xdesk (debug)"
+        },
+        {
+          "name": "xdesk-op",
+          "version": "1.0.0-1",
+          "description": "Project xdesk (optimized)"
+        }
+      ],
+      "updated": "2026-11-09"
+    }
+  ],
+  "checked": "2026-11-14T04:00:51Z"
+}

@@ -1,0 +1,37 @@
+# my-universe: every package repository of https://tsukini22.github.io/my-universe
+# Generated on 2026-11-14, the packages stay in the gh-pages of each project
+
+[universe-libutils]
+name=my-universe - libutils (hand-made)
+baseurl=https://tsukini22.github.io/libutils/fedora/$releasever/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://tsukini22.github.io/my-universe/RPM-GPG-KEY-tsukini
+
+[universe-brain]
+name=my-universe - brain (hand-made)
+baseurl=https://tsukini22.github.io/banana-brain/fedora/$releasever/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://tsukini22.github.io/my-universe/RPM-GPG-KEY-tsukini
+
+[universe-context-forge]
+name=my-universe - context-forge (hand-made)
+baseurl=https://tsukini22.github.io/context-forge/fedora/$releasever/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://tsukini22.github.io/my-universe/RPM-GPG-KEY-tsukini
+
+[universe-xstyle]
+name=my-universe - xstyle (ai-made)
+baseurl=https://tsukini22.github.io/xstyle/fedora/$releasever/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://tsukini22.github.io/my-universe/RPM-GPG-KEY-tsukini
+
+[universe-xdesk]
+name=my-universe - xdesk (ai-made)
+baseurl=https://tsukini22.github.io/xdesk/fedora/$releasever/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://tsukini22.github.io/my-universe/RPM-GPG-KEY-tsukini
