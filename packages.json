@@ -3,7 +3,7 @@
   "pages": "https://tsukini22.github.io",
   "site": "https://tsukini22.github.io/my-universe",
   "key": "RPM-GPG-KEY-tsukini",
-  "updated": "2026-11-11",
+  "updated": "2026-11-14",
   "sources": [
     {
       "name": "libutils",
@@ -454,7 +454,7 @@
         }
       },
       "version": "1.0.0-1",
-      "pre": "",
+      "pre": "1.1.0-2",
       "release": {
         "tag": "v1.0.0",
         "date": "2026-11-09",
@@ -472,17 +472,37 @@
           "description": "Coding style checker / fixer (asan)"
         },
         {
+          "name": "xstyle-as-pre",
+          "version": "1.1.0-2",
+          "description": "Coding style checker / fixer (asan)"
+        },
+        {
           "name": "xstyle-db",
           "version": "1.0.0-1",
+          "description": "Coding style checker / fixer (debug)"
+        },
+        {
+          "name": "xstyle-db-pre",
+          "version": "1.1.0-2",
           "description": "Coding style checker / fixer (debug)"
         },
         {
           "name": "xstyle-op",
           "version": "1.0.0-1",
           "description": "Coding style checker / fixer (optimized)"
+        },
+        {
+          "name": "xstyle-op-pre",
+          "version": "1.1.0-2",
+          "description": "Coding style checker / fixer (optimized)"
+        },
+        {
+          "name": "xstyle-pre",
+          "version": "1.1.0-2",
+          "description": "Coding style checker / fixer (global)"
         }
       ],
-      "updated": "2026-11-09"
+      "updated": "2026-11-14"
     },
     {
       "name": "xdesk",
