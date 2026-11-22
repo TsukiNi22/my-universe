@@ -3,7 +3,7 @@
   "pages": "https://tsukini22.github.io",
   "site": "https://tsukini22.github.io/my-universe",
   "key": "RPM-GPG-KEY-tsukini",
-  "updated": "2026-11-16",
+  "updated": "2026-11-22",
   "sources": [
     {
       "name": "libutils",
@@ -538,51 +538,51 @@
           ]
         }
       },
-      "version": "1.0.0-1",
+      "version": "1.9.2-1",
       "pre": "",
       "release": {
-        "tag": "v1.0.0",
-        "date": "2026-11-09",
-        "url": "https://github.com/TsukiNi22/xdesk/releases/tag/v1.0.0"
+        "tag": "v1.9.2",
+        "date": "2026-11-22",
+        "url": "https://github.com/TsukiNi22/xdesk/releases/tag/v1.9.2"
       },
       "packages": [
         {
           "name": "mingw64-xdesk",
-          "version": "1.0.0-1",
+          "version": "1.9.2-1",
           "description": "Project xdesk (global)"
         },
         {
           "name": "mingw64-xdesk-db",
-          "version": "1.0.0-1",
+          "version": "1.9.2-1",
           "description": "Project xdesk (debug)"
         },
         {
           "name": "mingw64-xdesk-op",
-          "version": "1.0.0-1",
+          "version": "1.9.2-1",
           "description": "Project xdesk (optimized)"
         },
         {
           "name": "xdesk",
-          "version": "1.0.0-1",
+          "version": "1.9.2-1",
           "description": "Project xdesk (global)"
         },
         {
           "name": "xdesk-as",
-          "version": "1.0.0-1",
+          "version": "1.9.2-1",
           "description": "Project xdesk (asan)"
         },
         {
           "name": "xdesk-db",
-          "version": "1.0.0-1",
+          "version": "1.9.2-1",
           "description": "Project xdesk (debug)"
         },
         {
           "name": "xdesk-op",
-          "version": "1.0.0-1",
+          "version": "1.9.2-1",
           "description": "Project xdesk (optimized)"
         }
       ],
-      "updated": "2026-11-09"
+      "updated": "2026-11-22"
     }
   ]
 }
