@@ -583,6 +583,82 @@
         }
       ],
       "updated": "2026-11-22"
+    },
+    {
+      "name": "xmouse",
+      "repo": "xmouse",
+      "category": "ai-made",
+      "private": false,
+      "main": "xmouse",
+      "summary": {
+        "en": "One cursor, keyboard and clipboard across a network of screens (Linux / Windows / Android), Qt6, TLS 1.3 post-quantum",
+        "fr": "Un curseur, un clavier et un presse-papiers sur un réseau d'écrans (Linux / Windows / Android), Qt6, TLS 1.3 post-quantique"
+      },
+      "repository": "https://github.com/TsukiNi22/xmouse",
+      "pages": "https://tsukini22.github.io/xmouse",
+      "docs": "https://tsukini22.github.io/xmouse/docs/",
+      "formats": {
+        "rpm": {
+          "releases": [
+            "44"
+          ],
+          "arches": [
+            "x86_64"
+          ]
+        },
+        "deb": {
+          "arches": [
+            "amd64"
+          ]
+        },
+        "arch": {
+          "db": "xmouse",
+          "arches": [
+            "x86_64"
+          ]
+        }
+      },
+      "version": "",
+      "pre": "1.0.6-9",
+      "release": null,
+      "packages": [
+        {
+          "name": "mingw64-xmouse-db-pre",
+          "version": "1.0.6-9",
+          "description": "Project xmouse (debug)"
+        },
+        {
+          "name": "mingw64-xmouse-op-pre",
+          "version": "1.0.6-9",
+          "description": "Project xmouse (optimized)"
+        },
+        {
+          "name": "mingw64-xmouse-pre",
+          "version": "1.0.6-9",
+          "description": "Project xmouse (global)"
+        },
+        {
+          "name": "xmouse-as-pre",
+          "version": "1.0.6-9",
+          "description": "Project xmouse (asan)"
+        },
+        {
+          "name": "xmouse-db-pre",
+          "version": "1.0.6-9",
+          "description": "Project xmouse (debug)"
+        },
+        {
+          "name": "xmouse-op-pre",
+          "version": "1.0.6-9",
+          "description": "Project xmouse (optimized)"
+        },
+        {
+          "name": "xmouse-pre",
+          "version": "1.0.6-9",
+          "description": "Project xmouse (global)"
+        }
+      ],
+      "updated": "2026-11-22"
     }
   ]
 }
