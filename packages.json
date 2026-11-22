@@ -619,42 +619,42 @@
         }
       },
       "version": "",
-      "pre": "1.0.6-9",
+      "pre": "1.0.7-10",
       "release": null,
       "packages": [
         {
           "name": "mingw64-xmouse-db-pre",
-          "version": "1.0.6-9",
+          "version": "1.0.7-10",
           "description": "Project xmouse (debug)"
         },
         {
           "name": "mingw64-xmouse-op-pre",
-          "version": "1.0.6-9",
+          "version": "1.0.7-10",
           "description": "Project xmouse (optimized)"
         },
         {
           "name": "mingw64-xmouse-pre",
-          "version": "1.0.6-9",
+          "version": "1.0.7-10",
           "description": "Project xmouse (global)"
         },
         {
           "name": "xmouse-as-pre",
-          "version": "1.0.6-9",
+          "version": "1.0.7-10",
           "description": "Project xmouse (asan)"
         },
         {
           "name": "xmouse-db-pre",
-          "version": "1.0.6-9",
+          "version": "1.0.7-10",
           "description": "Project xmouse (debug)"
         },
         {
           "name": "xmouse-op-pre",
-          "version": "1.0.6-9",
+          "version": "1.0.7-10",
           "description": "Project xmouse (optimized)"
         },
         {
           "name": "xmouse-pre",
-          "version": "1.0.6-9",
+          "version": "1.0.7-10",
           "description": "Project xmouse (global)"
         }
       ],
