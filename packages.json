@@ -3,7 +3,7 @@
   "pages": "https://tsukini22.github.io",
   "site": "https://tsukini22.github.io/my-universe",
   "key": "RPM-GPG-KEY-tsukini",
-  "updated": "2026-11-22",
+  "updated": "2026-11-23",
   "sources": [
     {
       "name": "libutils",
@@ -619,46 +619,46 @@
         }
       },
       "version": "",
-      "pre": "1.0.7-10",
+      "pre": "1.0.15-18",
       "release": null,
       "packages": [
         {
           "name": "mingw64-xmouse-db-pre",
-          "version": "1.0.7-10",
+          "version": "1.0.15-18",
           "description": "Project xmouse (debug)"
         },
         {
           "name": "mingw64-xmouse-op-pre",
-          "version": "1.0.7-10",
+          "version": "1.0.15-18",
           "description": "Project xmouse (optimized)"
         },
         {
           "name": "mingw64-xmouse-pre",
-          "version": "1.0.7-10",
+          "version": "1.0.15-18",
           "description": "Project xmouse (global)"
         },
         {
           "name": "xmouse-as-pre",
-          "version": "1.0.7-10",
+          "version": "1.0.15-18",
           "description": "Project xmouse (asan)"
         },
         {
           "name": "xmouse-db-pre",
-          "version": "1.0.7-10",
+          "version": "1.0.15-18",
           "description": "Project xmouse (debug)"
         },
         {
           "name": "xmouse-op-pre",
-          "version": "1.0.7-10",
+          "version": "1.0.15-18",
           "description": "Project xmouse (optimized)"
         },
         {
           "name": "xmouse-pre",
-          "version": "1.0.7-10",
+          "version": "1.0.15-18",
           "description": "Project xmouse (global)"
         }
       ],
-      "updated": "2026-11-22"
+      "updated": "2026-11-23"
     }
   ]
 }
