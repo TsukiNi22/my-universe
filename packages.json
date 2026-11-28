@@ -3,7 +3,7 @@
   "pages": "https://tsukini22.github.io",
   "site": "https://tsukini22.github.io/my-universe",
   "key": "RPM-GPG-KEY-tsukini",
-  "updated": "2026-11-27",
+  "updated": "2026-11-28",
   "sources": [
     {
       "name": "libutils",
@@ -40,7 +40,7 @@
         }
       },
       "version": "5.0.0-1",
-      "pre": "4.3.1-47",
+      "pre": "5.1.0-49",
       "release": {
         "tag": "v5.0.0",
         "date": "2026-11-26",
@@ -59,7 +59,7 @@
         },
         {
           "name": "libutils-as-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (asan)"
         },
         {
@@ -69,7 +69,7 @@
         },
         {
           "name": "libutils-db-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (debug)"
         },
         {
@@ -84,7 +84,7 @@
         },
         {
           "name": "libutils-dev-as-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (headers/cmake)"
         },
         {
@@ -94,7 +94,7 @@
         },
         {
           "name": "libutils-dev-db-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (headers/cmake)"
         },
         {
@@ -104,12 +104,12 @@
         },
         {
           "name": "libutils-dev-op-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (headers/cmake)"
         },
         {
           "name": "libutils-dev-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (headers/cmake)"
         },
         {
@@ -119,12 +119,12 @@
         },
         {
           "name": "libutils-op-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (optimized)"
         },
         {
           "name": "libutils-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (global)"
         },
         {
@@ -139,7 +139,7 @@
         },
         {
           "name": "mingw64-libutils-db-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (debug)"
         },
         {
@@ -154,7 +154,7 @@
         },
         {
           "name": "mingw64-libutils-dev-db-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (headers/cmake)"
         },
         {
@@ -164,12 +164,12 @@
         },
         {
           "name": "mingw64-libutils-dev-op-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (headers/cmake)"
         },
         {
           "name": "mingw64-libutils-dev-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (headers/cmake)"
         },
         {
@@ -179,16 +179,16 @@
         },
         {
           "name": "mingw64-libutils-op-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (optimized)"
         },
         {
           "name": "mingw64-libutils-pre",
-          "version": "4.3.1-47",
+          "version": "5.1.0-49",
           "description": "C++20 utility library (global)"
         }
       ],
-      "updated": "2026-11-27"
+      "updated": "2026-11-28"
     },
     {
       "name": "brain",
@@ -453,22 +453,22 @@
           ]
         }
       },
-      "version": "1.2.0-1",
+      "version": "1.2.1-1",
       "pre": "1.2.0-3",
       "release": {
-        "tag": "v1.2.0",
-        "date": "2026-11-15",
-        "url": "https://github.com/TsukiNi22/xstyle/releases/tag/v1.2.0"
+        "tag": "v1.2.1",
+        "date": "2026-11-27",
+        "url": "https://github.com/TsukiNi22/xstyle/releases/tag/v1.2.1"
       },
       "packages": [
         {
           "name": "xstyle",
-          "version": "1.2.0-1",
+          "version": "1.2.1-1",
           "description": "Coding style checker / fixer (global)"
         },
         {
           "name": "xstyle-as",
-          "version": "1.2.0-1",
+          "version": "1.2.1-1",
           "description": "Coding style checker / fixer (asan)"
         },
         {
@@ -478,7 +478,7 @@
         },
         {
           "name": "xstyle-db",
-          "version": "1.2.0-1",
+          "version": "1.2.1-1",
           "description": "Coding style checker / fixer (debug)"
         },
         {
@@ -488,7 +488,7 @@
         },
         {
           "name": "xstyle-op",
-          "version": "1.2.0-1",
+          "version": "1.2.1-1",
           "description": "Coding style checker / fixer (optimized)"
         },
         {
@@ -502,7 +502,7 @@
           "description": "Coding style checker / fixer (global)"
         }
       ],
-      "updated": "2026-11-16"
+      "updated": "2026-11-28"
     },
     {
       "name": "xdesk",

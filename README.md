@@ -31,7 +31,7 @@ The packages stay in the gh-pages repository of each project, my-universe only r
 
 | Name + Link | Version | Pre-release | Formats | Release | Last Update | Content |
 | ----------- | ------- | ----------- | ------- | ------- | ----------- | ------- |
-| [libutils](https://github.com/TsukiNi22/libutils) | `5.0.0` | - | `rpm` `deb` `arch` | [v5.0.0](https://github.com/TsukiNi22/libutils/releases/tag/v5.0.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/libutils) | C++20 library for many different tools: arguments, exceptions, network, IPC, cli, maths... |
+| [libutils](https://github.com/TsukiNi22/libutils) | `5.0.0` | `5.1.0-49` | `rpm` `deb` `arch` | [v5.0.0](https://github.com/TsukiNi22/libutils/releases/tag/v5.0.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/libutils) | C++20 library for many different tools: arguments, exceptions, network, IPC, cli, maths... |
 | [brain](https://github.com/TsukiNi22/banana-brain) | `1.0.0` | `1.2.0-5` | `rpm` `deb` `arch` | [old-v1.0.0](https://github.com/TsukiNi22/banana-brain/releases/tag/old-v1.0.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/banana-brain) | C++20 neural network library with several kinds of networks (banana included) |
 | [context-forge](https://github.com/TsukiNi22/context-forge) | `1.0.0` | - | `rpm` `deb` | [v1.0.0](https://github.com/TsukiNi22/context-forge/releases/tag/v1.0.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/context-forge) | Formatting of compiler output (stderr) with ollama and other means, for C++ compilers |
 
@@ -39,7 +39,7 @@ The packages stay in the gh-pages repository of each project, my-universe only r
 
 | Name + Link | Version | Pre-release | Formats | Release | Last Update | Content |
 | ----------- | ------- | ----------- | ------- | ------- | ----------- | ------- |
-| [xstyle](https://github.com/TsukiNi22/xstyle) | `1.2.0` | `1.2.0-3` | `rpm` `deb` `arch` | [v1.2.0](https://github.com/TsukiNi22/xstyle/releases/tag/v1.2.0) | ![](https://img.shields.io/github/last-commit/TsukiNi22/xstyle) | Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules |
+| [xstyle](https://github.com/TsukiNi22/xstyle) | `1.2.1` | - | `rpm` `deb` `arch` | [v1.2.1](https://github.com/TsukiNi22/xstyle/releases/tag/v1.2.1) | ![](https://img.shields.io/github/last-commit/TsukiNi22/xstyle) | Checker and fixer of my coding style: C++20 / libutils first, then Python, shell, Rust, CMake and generic rules |
 | [xdesk](https://github.com/TsukiNi22/xdesk) | `1.9.2` | - | `rpm` `deb` `arch` | [v1.9.2](https://github.com/TsukiNi22/xdesk/releases/tag/v1.9.2) | ![](https://img.shields.io/github/last-commit/TsukiNi22/xdesk) | Remote desktop and terminal in one binary (Windows / Unix), Qt6 or TTY, TLS 1.3 post-quantum |
 | [xmouse](https://github.com/TsukiNi22/xmouse) | `-` | `1.0.16-19` | `rpm` `deb` `arch` | - | ![](https://img.shields.io/github/last-commit/TsukiNi22/xmouse) | One cursor, keyboard and clipboard across a network of screens (Linux / Windows / Android), Qt6, TLS 1.3 post-quantum |
 <!-- universe:catalog:end -->
